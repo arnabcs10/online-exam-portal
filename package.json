@@ -4,7 +4,7 @@
   "description": "An online exam portal for conducting online exams, with plagiariam detection system",
   "main": "server.js",
   "scripts": {
-    "start": "node backend/server.js",
+    "server": "node backend/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "arnabcs10",
