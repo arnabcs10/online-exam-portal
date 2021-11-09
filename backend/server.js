@@ -7,7 +7,7 @@ const colors = require('colors');
 // Import Routes
 
 //Middlewares
-
+const { notFound,errorHandler} = require('./middlewares/errorMiddleware');
 
 //App config
 const app = express();
@@ -19,6 +19,7 @@ app.use(express.json()) //body-parser
 
 
 //Routes
+
 //Home
 if(process.env.NODE_ENV === 'production'){
     // send index.html file at production
@@ -30,8 +31,9 @@ if(process.env.NODE_ENV === 'production'){
 }
 
 
-
 //error handler
+app.use(notFound);
+app.use(errorHandler);
 
 //PORT
 const PORT = process.env.PORT || 5000;
