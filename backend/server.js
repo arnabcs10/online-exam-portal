@@ -1,8 +1,8 @@
 //Import dependencies
 const express = require('express');
-
+const dotenv = require('dotenv');
 const path = require('path');
-
+const colors = require('colors');
 
 // Import Routes
 
@@ -11,9 +11,8 @@ const path = require('path');
 
 //App config
 const app = express();
-
-//body-parser
-app.use(express.json()) 
+dotenv.config();
+app.use(express.json()) //body-parser
 
 
 //Database connection
@@ -21,12 +20,14 @@ app.use(express.json())
 
 //Routes
 //Home
-
-
-app.get('/',(req,res)=>{
-    res.send("API is running...");
-});
-
+if(process.env.NODE_ENV === 'production'){
+    // send index.html file at production
+    
+}else{
+    app.get('/',(req,res)=>{
+        res.send("API is running...");
+    });
+}
 
 
 
@@ -36,5 +37,5 @@ app.get('/',(req,res)=>{
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT,() =>{
-    console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+    console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold);
 });
