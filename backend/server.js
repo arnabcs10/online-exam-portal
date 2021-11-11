@@ -1,6 +1,7 @@
 //Import dependencies
 const express = require('express');
 const dotenv = require('dotenv');
+const connectDB = require('./config/db');
 const path = require('path');
 const colors = require('colors');
 
@@ -16,7 +17,7 @@ app.use(express.json()) //body-parser
 
 
 //Database connection
-
+connectDB();
 
 //Routes
 
