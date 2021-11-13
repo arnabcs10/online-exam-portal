@@ -1,46 +1,19 @@
 import React from 'react'
 import { Grid, Card, IconButton, Icon, Fab } from '@material-ui/core'
 
-const StatCard3 = () => {
-    const statList = [
-        {
-            icon: 'school',
-            name: 'Class 1',
-            subject: 'Computer Science',
-            section: 'A',
-        },
-        {
-            icon: 'school',
-            name: 'Class 1',
-            subject: 'Computer Science',
-            section: 'A',
-        },
-        {
-            icon: 'school',
-            name: 'Class 1',
-            subject: 'Computer Science',
-            section: 'A',
-        },
-        {
-            icon: 'school',
-            name: 'Class 1',
-            subject: 'Computer Science',
-            section: 'A',
-        },
-        {
-            icon: 'school',
-            name: 'Class 1',
-            subject: 'Computer Science',
-            section: 'A',
-        },
-        
-    ]
-
+const ClassCard = (props) => {
+    
+    const { classList, handleClickOpen } = props;
     return (
         <div>
             <Grid container spacing={3}>
                 <Grid key={'Create New Class'} item md={3} sm={6} xs={12}>
-                        <Card elevation={3} className="p-4 flex-column items-center">
+                        <Card 
+                            elevation={3} 
+                            className="p-4 flex-column items-center"
+                            onClick={handleClickOpen}
+                            style={{cursor:"pointer"}}
+                        >
                             <div>
                             <Fab
                                 size="medium"
@@ -54,7 +27,7 @@ const StatCard3 = () => {
                             </div>
                         </Card>        
                 </Grid>
-                {statList.map((item, ind) => (
+                {classList.map((item, ind) => (
                     <Grid key={item.name} item md={3} sm={6} xs={12}>
                         <Card elevation={3} className="p-4">
                             <div className="flex items-center">
@@ -69,7 +42,7 @@ const StatCard3 = () => {
                                 </h5>
                             </div>
                             <div className="pt-4 flex items-center">
-                                <h4 className="m-0 text-muted flex-grow">{item.subject}</h4>
+                                <h4 className="m-0 text-muted flex-grow">{item.subject.length > 16 ? `${item.subject.slice(0, 15)}..` : item.subject}</h4>
                                 
                                 <span className="text-13 text-green ml-1">section: {item.section}</span>
                             </div>
@@ -81,4 +54,4 @@ const StatCard3 = () => {
     )
 }
 
-export default StatCard3
+export default ClassCard

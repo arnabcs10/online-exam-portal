@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import useAuth from 'app/hooks/useAuth'
 import { Link } from 'react-router-dom'
 import {
@@ -9,7 +9,8 @@ import {
     Icon,
     Grid,
 } from '@material-ui/core'
-import StatCard3 from './shared/StatCard3'
+import ClassCard from './shared/ClassCard'
+import ClassFormDialog from './ClassFormDialog'
 import StatCard2 from './shared/StatCards2'
 import ComparisonChart2 from './shared/ComparisonChart2'
 import StatCard4 from './shared/StatCard4'
@@ -22,47 +23,58 @@ const ClassList = () => {
         isAuthenticated,
         // user
     } = useAuth()
+    const classList = [
+        {
+            icon: 'school',
+            name: 'Class 1',
+            subject: 'Operating System',
+            section: 'A',
+        },
+        {
+            icon: 'school',
+            name: 'Class 2',
+            subject: 'Database Management System',
+            section: 'A',
+        },
+        {
+            icon: 'school',
+            name: 'Class 3',
+            subject: 'OOPs',
+            section: 'A',
+        },
+        {
+            icon: 'school',
+            name: 'Class 4',
+            subject: 'Computer Networks',
+            section: 'A',
+        },
+        {
+            icon: 'school',
+            name: 'Class 5',
+            subject: 'Algorithms',
+            section: 'A',
+        },
+        
+    ]
+
+    const [open, setOpen] = useState(false)
+
+    function handleClickOpen() {
+        setOpen(true)
+    }
+
+    function handleClose() {
+        setOpen(false)
+    }
     return (
         <div className="analytics m-sm-30">
             <div className="flex justify-between items-center items-center mb-6">
                 <h3 className="m-0">Class List</h3>
-                {/* <TextField
-                    defaultValue="1"
-                    variant="outlined"
-                    size="small"
-                    select
-                >
-                    <MenuItem value="1">This Month</MenuItem>
-                    <MenuItem value="2">Last Month</MenuItem>
-                    <MenuItem value="3">Six Month</MenuItem>
-                    <MenuItem value="4">Last Year</MenuItem>
-                </TextField> */}
             </div>
+            <ClassFormDialog open={open}  handleClose={handleClose}/>
+            <ClassCard classList={classList} handleClickOpen={handleClickOpen}/>
 
-            <StatCard3 />
-
-            {/* <Card className="mt-5 mb-6" elevation={3}>
-                <div className=" px-4 py-3 mb-6 flex justify-between items-center bg-light-gray">
-                    <span className="font-medium text-muted">STATISTICS</span>
-                    <IconButton size="small">
-                        <Icon>more_horiz</Icon>
-                    </IconButton>
-                </div>
-                <ComparisonChart2 height={400} />
-            </Card> */}
-
-            {/* <Grid container spacing={3}>
-                <Grid item md={4} xs={12}>
-                    <StatCard4 />
-                </Grid>
-                <Grid item md={4} xs={12}>
-                    <GaugeProgressCard />
-                </Grid>
-                <Grid item md={4} xs={12}>
-                    <FollowerCard />
-                    <FollowerCard2 />
-                </Grid>
-            </Grid> */}
+            
         </div>
     )
 }
