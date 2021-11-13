@@ -10,7 +10,7 @@ export const navigations = [
     {
         name: 'Classes',
         path: '/class',
-        icon: 'account_box',
+        icon: 'class',
         
     },
     {
