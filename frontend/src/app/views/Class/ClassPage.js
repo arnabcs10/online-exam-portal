@@ -30,6 +30,7 @@ const ClassPage = () => {
                     </Card>
                 </Grid>
                 <Grid item md={4} xs={12}>
+                    <Link to="/class/1/student">
                         <Card elevation={3} className="p-5 mb-3 flex" style={{cursor:"pointer"}}>
                             <div>
                                 <Fab
@@ -46,6 +47,7 @@ const ClassPage = () => {
                                 <p className="m-0 text-muted">Click Here</p>
                             </div>
                         </Card>
+                    </Link>
                         <Card elevation={3} className="p-5 flex" style={{cursor:"pointer"}}>
                             <div>
                                 <Fab
