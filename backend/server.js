@@ -6,6 +6,7 @@ const path = require('path');
 const colors = require('colors');
 
 // Import Routes
+const examinerRoutes = require('./routes/examinerRoutes');
 
 //Middlewares
 const { notFound,errorHandler} = require('./middlewares/errorMiddleware');
@@ -20,8 +21,12 @@ app.use(express.json()) //body-parser
 connectDB();
 
 //Routes
-
 //Home
+
+// /api/route/
+app.use('/api/examiners',examinerRoutes);
+
+
 if(process.env.NODE_ENV === 'production'){
     // send index.html file at production
     
