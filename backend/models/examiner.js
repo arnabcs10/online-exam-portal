@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 
-const teacherSchema = mongoose.Schema({
+const examinerSchema = mongoose.Schema({
     _id:{
         type:String,
         required:true,
@@ -27,6 +27,6 @@ const teacherSchema = mongoose.Schema({
 
 
 
-const Teacher = mongoose.model('teacher',teacherSchema);
+const Examiner = mongoose.model('examiner',examinerSchema);
 
-module.exports = Teacher;
+module.exports = Examiner;

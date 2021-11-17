@@ -20,10 +20,10 @@ const groupSchema = mongoose.Schema({
     description:{
         type:String,
     },
-    teacherId:{
+    examinerId:{
         type:mongoose.Schema.Types.ObjectId,
         required:true,
-        ref:'Teacher'
+        ref:'Examiner'
     },
     strength:{
         type:Number
