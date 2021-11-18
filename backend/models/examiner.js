@@ -4,8 +4,8 @@ const bcrypt = require('bcryptjs');
 const examinerSchema = mongoose.Schema({
     _id:{
         type:String,
-        required:true,
-        unique:true
+        // required:true,
+        // unique:true
     },
     name:{
         type:String,
@@ -35,7 +35,7 @@ examinerSchema.pre('save', async function(next){
         next();
     }
     
-    const salt = await bcrypt.getSalt(10);
+    const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
 })
 

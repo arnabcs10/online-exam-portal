@@ -17,10 +17,11 @@ const registerExaminer = asyncHandler(
             throw new Error('User already exist');
         }
 
-        const id = generateUUID;
+        const id = generateUUID();
         const examiner = await Examiner.create({
-            _id = id,
+            _id: id,
             name,
+            email,
             password
         });
 
@@ -72,9 +73,9 @@ const authExaminer = asyncHandler(
 const getExaminerProfile = asyncHandler(
     async (req, res) => {
 
-        if(req.user)
+        if(req.examiner)
         {
-            const {_id, name, email} = req.user;
+            const {_id, name, email} = req.examiner;
             res.json({
                 _id,
                 name,
@@ -86,3 +87,5 @@ const getExaminerProfile = asyncHandler(
         }
     }
 );
+
+module.exports = {registerExaminer, authExaminer, getExaminerProfile};

@@ -13,7 +13,7 @@ const protect = asyncHandler(
 
                 const decodedPayLoad = jwt.verify(token, process.env.JWT_SECRET);
 
-                req.user = await Examiner.findById(decodedPayLoad.id).select('-password');
+                req.examiner = await Examiner.findById(decodedPayLoad.id).select('-password');
 
                 next();
             } catch (error) {
