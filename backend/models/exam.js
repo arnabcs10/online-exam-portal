@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 
 const examSchema = mongoose.Schema({
-    _id:{
-        type:String,
-        required:true,
-        unique:true
-    },
+    // _id:{
+    //     type:String,
+    //     required:true,
+    //     unique:true
+    // },
     groupId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Group',

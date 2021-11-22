@@ -1,7 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const Examiner = require('../models/examiner');
 const generateToken = require('../utils/generateToken');
-const generateUUID = require('../utils/generateUUID');
+// const generateUUID = require('../utils/generateUUID');
 
 //@desc Register examiner
 //@route POST /api/examiners
@@ -17,9 +17,9 @@ const registerExaminer = asyncHandler(
             throw new Error('User already exist');
         }
 
-        const id = generateUUID();
+        // const id = generateUUID();
         const examiner = await Examiner.create({
-            _id: id,
+            // _id: id,
             name,
             email,
             password
