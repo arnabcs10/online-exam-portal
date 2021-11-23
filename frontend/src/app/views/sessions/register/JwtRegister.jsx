@@ -5,6 +5,7 @@ import {
     FormControlLabel,
     Grid,
     Button,
+    CircularProgress
 } from '@material-ui/core'
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 import { makeStyles } from '@material-ui/core/styles'
@@ -22,10 +23,20 @@ const useStyles = makeStyles(({ palette, ...theme }) => ({
         borderRadius: 12,
         margin: '1rem',
     },
+    buttonProgress: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12,
+    },
 }))
 
 const JwtRegister = () => {
     const [state, setState] = useState({})
+    const [loading, setLoading] = useState(false)
+    const [message, setMessage] = useState('')
+
     const classes = useStyles()
     const { register } = useAuth()
 
@@ -36,12 +47,15 @@ const JwtRegister = () => {
         })
     }
 
-    const handleFormSubmit = (event) => {
+    const handleFormSubmit = async (event) => {
+        setLoading(true)
         try {
-            register(state.email, state.username, state.password)
+            await register(state.email, state.username, state.password)
             history.push('/')
         } catch (e) {
             console.log(e)
+            setMessage(e.message)
+            setLoading(false)
         }
     }
 
@@ -126,15 +140,27 @@ const JwtRegister = () => {
                                     }
                                     label="I have read and agree to the terms of service."
                                 />
+                                {message && (
+                                    <p className="text-error">{message}</p>
+                                )}
                                 <div className="flex items-center">
                                     <Button
                                         className="capitalize"
                                         variant="contained"
                                         color="primary"
                                         type="submit"
+                                        disabled={loading}
                                     >
                                         Sign up
                                     </Button>
+                                    {loading && (
+                                            <CircularProgress
+                                                size={24}
+                                                className={
+                                                    classes.buttonProgress
+                                                }
+                                            />
+                                        )}
                                     <span className="mx-2 ml-5">or</span>
                                     <Link to="/session/signin">
                                         <Button className="capitalize">
