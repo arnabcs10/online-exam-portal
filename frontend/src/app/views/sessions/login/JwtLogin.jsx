@@ -35,8 +35,10 @@ const useStyles = makeStyles(({ palette, ...theme }) => ({
 const JwtLogin = () => {
     const [loading, setLoading] = useState(false)
     const [userInfo, setUserInfo] = useState({
-        email: 'jason@ui-lib.com',
-        password: 'dummyPass',
+        // email: 'jason@ui-lib.com',
+        // password: 'dummyPass',
+        email: '',
+        password: '',
     })
     const [message, setMessage] = useState('')
     const { login } = useAuth()
@@ -90,6 +92,7 @@ const JwtLogin = () => {
                                     onChange={handleChange}
                                     type="email"
                                     name="email"
+                                    placeholder="enter your email"
                                     value={userInfo.email}
                                     validators={['required', 'isEmail']}
                                     errorMessages={[
@@ -105,6 +108,7 @@ const JwtLogin = () => {
                                     onChange={handleChange}
                                     name="password"
                                     type="password"
+                                    placeholder="enter your password"
                                     value={userInfo.password}
                                     validators={['required']}
                                     errorMessages={['this field is required']}

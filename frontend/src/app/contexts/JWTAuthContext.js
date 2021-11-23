@@ -9,23 +9,23 @@ const initialState = {
     user: null,
 }
 
-const isValidToken = (accessToken) => {
-    if (!accessToken) {
+const isValidToken = (token) => {
+    if (!token) {
         return false
     }
 
-    const decodedToken = jwtDecode(accessToken)
+    const decodedToken = jwtDecode(token)
     const currentTime = Date.now() / 1000
     console.log(decodedToken)
     return decodedToken.exp > currentTime
 }
 
-const setSession = (accessToken) => {
-    if (accessToken) {
-        localStorage.setItem('accessToken', accessToken)
-        axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`
+const setSession = (token) => {
+    if (token) {
+        localStorage.setItem('token', token)
+        axios.defaults.headers.common.Authorization = `Bearer ${token}`
     } else {
-        localStorage.removeItem('accessToken')
+        localStorage.removeItem('token')
         delete axios.defaults.headers.common.Authorization
     }
 }
@@ -85,13 +85,18 @@ export const AuthProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     const login = async (email, password) => {
-        const response = await axios.post('/api/auth/login', {
+        const response = await axios.post('/api/examiners/login', { 
             email,
             password,
         })
-        const { accessToken, user } = response.data
-
-        setSession(accessToken)
+        console.log(response.data);
+        const { token } = response.data
+        const user = {
+            name: response.data.name,
+            email: response.data.email,
+            id: response.data._id
+        }
+        setSession(token)
 
         dispatch({
             type: 'LOGIN',
@@ -102,15 +107,19 @@ export const AuthProvider = ({ children }) => {
     }
 
     const register = async (email, username, password) => {
-        const response = await axios.post('/api/auth/register', {
+        const response = await axios.post('/api/examiners', {
             email,
             username,
             password,
         })
 
-        const { accessToken, user } = response.data
-
-        setSession(accessToken)
+        const { token } = response.data
+        const user = {
+            name: response.data.name,
+            email: response.data.email,
+            id: response.data._id
+        }
+        setSession(token)
 
         dispatch({
             type: 'REGISTER',
@@ -128,12 +137,16 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         ;(async () => {
             try {
-                const accessToken = window.localStorage.getItem('accessToken')
+                const token = window.localStorage.getItem('token')
 
-                if (accessToken && isValidToken(accessToken)) {
-                    setSession(accessToken)
-                    const response = await axios.get('/api/auth/profile')
-                    const { user } = response.data
+                if (token && isValidToken(token)) {
+                    setSession(token)
+                    const response = await axios.get('/api/examiners/profile')
+                    const user = {
+                        name: response.data.name,
+                        email: response.data.email,
+                        id: response.data._id
+                    }
 
                     dispatch({
                         type: 'INIT',
