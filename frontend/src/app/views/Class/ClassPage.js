@@ -1,6 +1,7 @@
 import React from 'react'
 import useAuth from 'app/hooks/useAuth'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux';
 import {
     Card,
     IconButton,
@@ -16,6 +17,8 @@ const ClassPage = () => {
         isAuthenticated,
         // user
     } = useAuth()
+    const classState = useSelector(state => state.classStore);
+    const { loading, message, classDetails } = classState;
     return (
         <div className="analytics m-sm-30">
             <Grid container spacing={2}>
@@ -30,7 +33,7 @@ const ClassPage = () => {
                     </Card>
                 </Grid>
                 <Grid item md={4} xs={12}>
-                    <Link to="/class/1/student">
+                    <Link to={`/class/${classDetails._id}/student`}>
                         <Card elevation={3} className="p-5 mb-3 flex" style={{cursor:"pointer"}}>
                             <div>
                                 <Fab
@@ -49,7 +52,7 @@ const ClassPage = () => {
                         </Card>
                     </Link>
 
-                    <Link to="/class/1/test">
+                    <Link to={`/class/${classDetails._id}/test`}>
                         <Card elevation={3} className="p-5 flex" style={{cursor:"pointer"}}>
                             <div>
                                 <Fab

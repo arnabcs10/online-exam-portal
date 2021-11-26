@@ -8,6 +8,10 @@ export const CLASS_CREATE_REQUEST = 'CLASS_CREATE_REQUEST';
 export const CLASS_CREATE_SUCCESS = 'CLASS_CREATE_SUCCESS';
 export const CLASS_CREATE_FAIL = 'CLASS_CREATE_FAIL';
 
+export const CLASS_DETAILS_REQUEST = 'CLASS_DETAILS_REQUEST';
+export const CLASS_DETAILS_SUCCESS = 'CLASS_DETAILS_SUCCESS';
+export const CLASS_DETAILS_FAIL = 'CLASS_DETAILS_FAIL';
+
 export const listClasses = () => async (dispatch) =>{
     try{
         dispatch({ type: CLASS_LIST_REQUEST });
@@ -58,6 +62,26 @@ export const createClass = (classDetails) => async (dispatch) => {
                         : error.message
             }
         
+        });
+    }
+}
+
+export const getClassDetails = (classId) => async (dispatch) =>{
+    try{
+        dispatch({ type: CLASS_DETAILS_REQUEST });
+
+        const { data } = await axios.get(`/api/groups/${classId}`);
+        
+        dispatch({ type: CLASS_DETAILS_SUCCESS, payload: data });
+    }catch(error){
+        dispatch( { 
+            type: CLASS_DETAILS_FAIL,
+            message:{
+                variant: 'error',
+                content: error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message
+            } 
         });
     }
 }

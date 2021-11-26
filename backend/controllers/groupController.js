@@ -47,6 +47,24 @@ const getGroups = asynHandler(
     }
 );
 
+//@desc fetch a group by Id, belongs to an examiner
+//@route GET /api/groups/:id
+//@access Private
+
+const getGroupById = asynHandler(
+    async (req, res) => {
+        const group = await Group.findById(req.params.id);
+
+        if(group){
+
+            res.json(group);
+        }else{
+            res.status(404);
+            throw new Error('No class found');
+        }
+    }
+);
 
 
-module.exports = {createGroup, getGroups };
+
+module.exports = {createGroup, getGroups, getGroupById };

@@ -7,13 +7,17 @@ import {
     CLASS_CREATE_SUCCESS, 
     CLASS_CREATE_FAIL,
 
+    CLASS_DETAILS_REQUEST,
+    CLASS_DETAILS_SUCCESS, 
+    CLASS_DETAILS_FAIL,
 
 } from '../actions/ClassActions';
 
 const initialState = {
     loading: false,
     message: null,
-    classList: [] 
+    classList: [],
+    classDetails: {}
 };
 
 export const classReducer = (state = initialState, action) => {
@@ -29,6 +33,12 @@ export const classReducer = (state = initialState, action) => {
         case CLASS_CREATE_SUCCESS:
             return { loading: false, classList: [...state.classList, action.payload], message:action.message  };
         case CLASS_CREATE_FAIL:
+            return { ...state, loading: false, message: action.message };
+        case CLASS_DETAILS_REQUEST:
+            return { ...state, loading: true };
+        case CLASS_DETAILS_SUCCESS:
+            return { ...state, loading: false, classDetails: action.payload  };
+        case CLASS_DETAILS_FAIL:
             return { ...state, loading: false, message: action.message };
         default:
             return state;

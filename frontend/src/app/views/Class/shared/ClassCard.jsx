@@ -1,9 +1,19 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Card, IconButton, Icon, Fab } from '@material-ui/core'
 import MatxLoading from 'app/components/MatxLoading/MatxLoading';
+import {getClassDetails} from 'app/redux/actions/ClassActions';
+
 
 const ClassCard = (props) => {
+    const dispatch = useDispatch();
     
+
+    const handleClick =(id) =>{
+        dispatch(getClassDetails(id));
+    }
+
     const { classList, handleClickOpen, loading } = props;
     return (
         <div>
@@ -31,8 +41,9 @@ const ClassCard = (props) => {
                 {loading ? (<MatxLoading/>) :  (
                       <>
                         {classList.map((item, ind) => (
-                            <Grid key={item.name} item md={3} sm={6} xs={12}>
-                                <Card elevation={3} className="p-4">
+                            <Grid key={item._id} item md={3} sm={6} xs={12}>
+                                <Link to={`/class/${item._id}`}>
+                                <Card elevation={3} className="p-4" onClick={() => handleClick(item._id)}>
                                     <div className="flex items-center">
                                         <Fab
                                             size="medium"
@@ -50,6 +61,7 @@ const ClassCard = (props) => {
                                         <span className="text-13 text-green ml-1">section: {item.section}</span>
                                     </div>
                                 </Card>
+                                </Link>
                             </Grid>
                         ))}
                         </>  
