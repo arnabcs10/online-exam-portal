@@ -1,10 +1,10 @@
 import React from 'react'
 import { Grid, Card, IconButton, Icon, Fab } from '@material-ui/core'
 import MatxLoading from 'app/components/MatxLoading/MatxLoading';
-import Message from '../CustomSnackbar';
+
 const ClassCard = (props) => {
     
-    const { classList, handleClickOpen, loading, error } = props;
+    const { classList, handleClickOpen, loading } = props;
     return (
         <div>
             <Grid container spacing={3}>
@@ -28,7 +28,7 @@ const ClassCard = (props) => {
                             </div>
                         </Card>        
                 </Grid>
-                {loading ? (<MatxLoading/>) : error ? (<Message variant={'error'} message={error}/>): (
+                {loading ? (<MatxLoading/>) :  (
                       <>
                         {classList.map((item, ind) => (
                             <Grid key={item.name} item md={3} sm={6} xs={12}>

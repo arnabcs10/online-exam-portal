@@ -6,6 +6,9 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
+import { useDispatch, useSelector } from 'react-redux';
+import {createClass} from 'app/redux/actions/ClassActions';
+
 
 export default function ClassFormDialog(props) {
 
@@ -17,10 +20,12 @@ export default function ClassFormDialog(props) {
         description:""
     })
 
+    const dispatch = useDispatch();
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log("submitted");
-        console.log(state);
+        // console.log(state);
+        dispatch(createClass(state));
         handleClose();
         setState({
             name:"",

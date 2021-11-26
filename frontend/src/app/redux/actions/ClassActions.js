@@ -4,6 +4,10 @@ export const CLASS_LIST_REQUEST = 'CLASS_LIST_REQUEST';
 export const CLASS_LIST_SUCCESS = 'CLASS_LIST_SUCCESS';
 export const CLASS_LIST_FAIL = 'CLASS_LIST_FAIL';
 
+export const CLASS_CREATE_REQUEST = 'CLASS_CREATE_REQUEST';
+export const CLASS_CREATE_SUCCESS = 'CLASS_CREATE_SUCCESS';
+export const CLASS_CREATE_FAIL = 'CLASS_CREATE_FAIL';
+
 export const listClasses = () => async (dispatch) =>{
     try{
         dispatch({ type: CLASS_LIST_REQUEST });
@@ -14,9 +18,45 @@ export const listClasses = () => async (dispatch) =>{
     }catch(error){
         dispatch( { 
             type: CLASS_LIST_FAIL,
-            payload: error.response && error.response.data.message
+            message:{
+                variant: 'error',
+                content: error.response && error.response.data.message
                         ? error.response.data.message
                         : error.message
+            } 
+        });
+    }
+}
+
+export const createClass = (classDetails) => async (dispatch) => {
+    try {
+        dispatch({
+            type: CLASS_CREATE_REQUEST,
+        });
+
+
+        const {data } = await axios.post(`/api/groups`, classDetails);
+
+
+        dispatch({
+            type: CLASS_CREATE_SUCCESS,
+            payload: data,
+            message:{
+                variant: 'success',
+                content: 'Class created successfully'
+            }
+        });
+        
+        
+    } catch (error) {
+        dispatch( { 
+            type: CLASS_CREATE_FAIL,
+            message:{
+                variant: 'error',
+                content: error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message
+            }
         
         });
     }

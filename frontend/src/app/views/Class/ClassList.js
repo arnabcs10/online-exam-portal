@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {listClasses} from 'app/redux/actions/ClassActions';
 import ClassCard from './shared/ClassCard'
 import ClassFormDialog from './ClassFormDialog'
-
+import Message from './CustomSnackbar';
 
 const ClassList = () => {
     const {
@@ -13,8 +13,8 @@ const ClassList = () => {
         // user
     } = useAuth()
     const dispatch = useDispatch();
-    const classList = useSelector(state => state.classList);
-    const { loading, error, classes } = classList;
+    const classState = useSelector(state => state.classStore);
+    const { loading, message, classList } = classState;
     useEffect(() => {
         dispatch(listClasses());
     }, [dispatch]);
@@ -66,8 +66,9 @@ const ClassList = () => {
             <div className="flex justify-between items-center items-center mb-6">
                 <h3 className="m-0">Class List</h3>
             </div>
+            {message && (<Message variant={message.variant} message={message.content}/>)}
             <ClassFormDialog open={open}  handleClose={handleClose}/>
-            <ClassCard classList={classes} loading={loading} error={error} handleClickOpen={handleClickOpen}/>
+            <ClassCard classList={classList} loading={loading}  handleClickOpen={handleClickOpen}/>
 
             
         </div>
