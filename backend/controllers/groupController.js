@@ -53,7 +53,7 @@ const getGroups = asynHandler(
 
 const getGroupById = asynHandler(
     async (req, res) => {
-        const group = await Group.findById(req.params.id);
+        const group = await Group.findById(req.params.id).populate('studentsEnrolled');;
 
         if(group){
 

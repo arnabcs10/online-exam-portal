@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import { useSelector } from 'react-redux';
 import {
     Table,
     TableHead,
@@ -7,9 +8,11 @@ import {
     IconButton,
     Icon,
     TableRow,
-} from '@material-ui/core'
+} from '@material-ui/core';
 
 const StudentList = () => {
+    const classState = useSelector(state => state.classStore);
+    const { loading, message, classDetails } = classState;
     const subscribarList = [
         {
             name: 'Arnab Sengupta',
@@ -69,16 +72,16 @@ const StudentList = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {subscribarList.map((subscriber, index) => (
-                                <TableRow key={index}>
+                            {classDetails.studentsEnrolled.map((student) => (
+                                <TableRow key={student._id}>
                                     <TableCell className="px-0" align="left">
-                                        {subscriber.name}
+                                        {student.name}
                                     </TableCell>
                                     <TableCell className="px-0" align="left">
-                                        {subscriber.rollNumber}
+                                        {student.rollNumber}
                                     </TableCell>
                                     <TableCell className="px-0" align="left">
-                                        {subscriber.email}
+                                        {student.email}
                                     </TableCell>                                    
                                     <TableCell className="px-0">
                                         <IconButton>
