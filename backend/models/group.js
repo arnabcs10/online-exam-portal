@@ -31,7 +31,7 @@ const groupSchema = mongoose.Schema({
     studentsEnrolled:[
         {
             type:mongoose.Schema.Types.ObjectId,
-            ref:'Student'
+            ref:'student'
         }
     ],
     examsTaken:[
