@@ -23,6 +23,7 @@ const addStudent = asyncHandler(
                     const updatedStudent = await studentExist.save();
                     
                     group.studentsEnrolled.push(updatedStudent._id);
+                    group.strength = group.studentsEnrolled.length;
                     await group.save();
 
                     res.status(201);
@@ -39,6 +40,7 @@ const addStudent = asyncHandler(
                 const newStudent = await student.save();
 
                 group.studentsEnrolled.push(newStudent._id);
+                group.strength = group.studentsEnrolled.length;
                 await group.save();
 
                 res.status(201);
@@ -53,4 +55,39 @@ const addStudent = asyncHandler(
     }
 );
 
-module.exports = {addStudent};
+// @desc all many students by examiner
+// @route POST /api/students/many
+// @access Private
+/*
+studentArray : [
+    {
+        name, email, rollNumber
+    }
+]
+*/
+const addManyStudents = asyncHandler(
+    async (req, res) => {
+        try {
+            const {classId, studentArray } = req.body;
+            const group = await Group.findById(classId);
+
+            const data = await Student.insertMany(studentArray);
+            // console.log(data);
+            data.forEach(element => {
+                group.studentsEnrolled.push(element._id);
+            });
+
+            group.strength = group.studentsEnrolled.length;
+            await group.save();
+
+            res.status(201);
+            res.json(group);
+        } catch (error) {
+            console.log(error.message);
+            res.status(500);
+            throw new Error(error.message);
+        }
+    }
+);
+
+module.exports = {addStudent,addManyStudents};
