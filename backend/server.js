@@ -8,6 +8,7 @@ const colors = require('colors');
 // Import Routes
 const examinerRoutes = require('./routes/examinerRoutes');
 const groupRoutes = require('./routes/groupRoutes');
+const studentRoutes = require('./routes/studentRoutes');
 
 //Middlewares
 const { notFound,errorHandler} = require('./middlewares/errorMiddleware');
@@ -27,6 +28,7 @@ connectDB();
 // /api/route/
 app.use('/api/examiners',examinerRoutes);
 app.use('/api/groups',groupRoutes);
+app.use('/api/students',studentRoutes);
 
 
 if(process.env.NODE_ENV === 'production'){
