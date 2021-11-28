@@ -99,7 +99,11 @@ export const addNewStudent = (studentData,classId,many) => async (dispatch) =>{
 
         const { data } = await axios.get(`/api/groups/${classId}`);
         
-        dispatch({ type: CLASS_DETAILS_SUCCESS, payload: data });
+        dispatch({ type: CLASS_DETAILS_SUCCESS, payload: data, 
+            message:{
+            variant: 'success',
+            content: 'Students are added successfully'
+        } });
     }catch(error){
         dispatch( { 
             type: CLASS_DETAILS_FAIL,
