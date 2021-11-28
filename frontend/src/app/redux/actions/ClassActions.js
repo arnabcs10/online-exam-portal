@@ -86,11 +86,16 @@ export const getClassDetails = (classId) => async (dispatch) =>{
     }
 }
 
-export const addNewStudent = (studentData,classId) => async (dispatch) =>{
+export const addNewStudent = (studentData,classId,many) => async (dispatch) =>{
     try{
         dispatch({ type: CLASS_DETAILS_REQUEST });
 
-        await axios.post('/api/students', {...studentData, classId});
+        if(many){
+            await axios.post('/api/students/many', {studentArray:studentData, classId});
+        }else{
+            await axios.post('/api/students', {...studentData, classId});
+        }
+        
 
         const { data } = await axios.get(`/api/groups/${classId}`);
         

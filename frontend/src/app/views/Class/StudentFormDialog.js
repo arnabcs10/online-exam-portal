@@ -24,7 +24,7 @@ export default function StudentFormDialog(props) {
         event.preventDefault();
         console.log("submitted");
         console.log(state);
-        dispatch(addNewStudent(state,classId));
+        dispatch(addNewStudent(state,classId,false));
         handleClose();
         setState({
             name:"",
