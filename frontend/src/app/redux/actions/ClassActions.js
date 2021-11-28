@@ -85,3 +85,25 @@ export const getClassDetails = (classId) => async (dispatch) =>{
         });
     }
 }
+
+export const addNewStudent = (studentData,classId) => async (dispatch) =>{
+    try{
+        dispatch({ type: CLASS_DETAILS_REQUEST });
+
+        await axios.post('/api/students', {...studentData, classId});
+
+        const { data } = await axios.get(`/api/groups/${classId}`);
+        
+        dispatch({ type: CLASS_DETAILS_SUCCESS, payload: data });
+    }catch(error){
+        dispatch( { 
+            type: CLASS_DETAILS_FAIL,
+            message:{
+                variant: 'error',
+                content: error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message
+            } 
+        });
+    }
+}

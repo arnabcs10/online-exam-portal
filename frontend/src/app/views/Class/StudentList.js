@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{ useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
     Table,
@@ -8,56 +8,32 @@ import {
     IconButton,
     Icon,
     TableRow,
+    Button,
 } from '@material-ui/core';
+import StudentFormDialog from './StudentFormDialog';
 
 const StudentList = () => {
     const classState = useSelector(state => state.classStore);
     const { loading, message, classDetails } = classState;
-    const subscribarList = [
-        {
-            name: 'Arnab Sengupta',
-            email: 'arnab10panda@gmail.com',
-            rollNumber: '18UCS024',
-        },
-        {
-            name: 'Bitanuka Deb',
-            email: 'bitanuka@gmail.com',
-            rollNumber: '18UCS021',
-        },
-        {
-            name: 'Hrishav Chaudhuri',
-            email: 'hrishav@gmail.com',
-            rollNumber: '18UCS023',
-        },
-        {
-            name: 'Arghya Sutradhar',
-            email: 'arghya@gmail.com',
-            rollNumber: '18UCS026',
-        },
-        {
-            name: 'Abbcser cassegne',
-            email: 'abhranil@gmail.com',
-            rollNumber: '18UCS025',
-        },
-        {
-            name: 'lucy brown',
-            email: 'bitanuka@gmail.com',
-            rollNumber: '18UCS025',
-        },
-        {
-            name: 'lucy brown',
-            email: 'bitanuka@gmail.com',
-            rollNumber: '18UCS025',
-        },
-        {
-            name: 'lucy brown',
-            email: 'bitanuka@gmail.com',
-            rollNumber: '18UCS025',
-        },
-    ]
+    const [open, setOpen] = useState(false)
+
+    function handleClickOpen() {
+        setOpen(true)
+    }
+
+    function handleClose() {
+        setOpen(false)
+    }
     
     return (
+        <>
+        <StudentFormDialog open={open}  handleClose={handleClose} classId={classDetails._id}/>
         <div className="analytics m-sm-30">
+            <div className="flex justify-between items-center items-center mb-6">
+                <h3 className="m-0">Add New Students</h3>
+                
+            </div>
+            <Button color="primary" variant="contained" onClick={handleClickOpen}>Click</Button>
             <div className="flex justify-between items-center items-center mb-6">
                 <h3 className="m-0">Students</h3>
             </div>
@@ -95,6 +71,7 @@ const StudentList = () => {
                 </div>
             
         </div>
+        </>
     )
 }
 
