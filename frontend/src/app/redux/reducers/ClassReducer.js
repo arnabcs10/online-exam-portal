@@ -17,7 +17,7 @@ const initialState = {
     loading: false,
     message: null,
     classList: [],
-    classDetails: {}
+    classDetails: localStorage.getItem('classDetails') ? JSON.parse(localStorage.getItem('classDetails')) : {}
 };
 
 export const classReducer = (state = initialState, action) => {
@@ -37,7 +37,7 @@ export const classReducer = (state = initialState, action) => {
         case CLASS_DETAILS_REQUEST:
             return { ...state, loading: true };
         case CLASS_DETAILS_SUCCESS:
-            return { ...state, loading: false, classDetails: action.payload  };
+            return { ...state, loading: false, classDetails: action.payload, message:action.message  };
         case CLASS_DETAILS_FAIL:
             return { ...state, loading: false, message: action.message };
         default:

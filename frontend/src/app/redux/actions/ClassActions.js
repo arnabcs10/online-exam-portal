@@ -72,6 +72,8 @@ export const getClassDetails = (classId) => async (dispatch) =>{
 
         const { data } = await axios.get(`/api/groups/${classId}`);
         
+        localStorage.setItem('classDetails', JSON.stringify(data));
+
         dispatch({ type: CLASS_DETAILS_SUCCESS, payload: data });
     }catch(error){
         dispatch( { 
@@ -99,6 +101,8 @@ export const addNewStudent = (studentData,classId,many) => async (dispatch) =>{
 
         const { data } = await axios.get(`/api/groups/${classId}`);
         
+        localStorage.setItem('classDetails', JSON.stringify(data));
+
         dispatch({ type: CLASS_DETAILS_SUCCESS, payload: data, 
             message:{
             variant: 'success',
