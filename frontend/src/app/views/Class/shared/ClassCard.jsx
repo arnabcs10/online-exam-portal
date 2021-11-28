@@ -11,7 +11,7 @@ const ClassCard = (props) => {
     
 
     const handleClick =(id) =>{
-        dispatch(getClassDetails(id));
+        // dispatch(getClassDetails(id));
     }
 
     const { classList, handleClickOpen, loading } = props;

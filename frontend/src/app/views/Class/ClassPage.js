@@ -1,7 +1,7 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import useAuth from 'app/hooks/useAuth'
-import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux';
+import { Link, useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
 import {
     Card,
     IconButton,
@@ -10,9 +10,15 @@ import {
     Grid,
     CardMedia
 } from '@material-ui/core'
-
+import {getClassDetails} from 'app/redux/actions/ClassActions';
 
 const ClassPage = () => {
+    const dispatch = useDispatch();
+    const {classId} = useParams();
+    useEffect(() => {
+        dispatch(getClassDetails(classId));
+    }, [])
+    
     const {
         isAuthenticated,
         // user
