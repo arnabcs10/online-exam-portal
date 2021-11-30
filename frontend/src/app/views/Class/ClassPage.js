@@ -1,5 +1,4 @@
 import React,{useEffect} from 'react'
-import useAuth from 'app/hooks/useAuth'
 import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -17,12 +16,9 @@ const ClassPage = () => {
     const {classId} = useParams();
     useEffect(() => {
         dispatch(getClassDetails(classId));
-    }, [])
+    }, [dispatch,classId]);
     
-    const {
-        isAuthenticated,
-        // user
-    } = useAuth()
+  
     const classState = useSelector(state => state.classStore);
     const { loading, message, classDetails } = classState;
     return (

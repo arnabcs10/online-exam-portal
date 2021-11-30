@@ -1,4 +1,5 @@
-import React, { Fragment } from 'react'
+import React, { useEffect, Fragment } from 'react'
+import { useSelector } from 'react-redux';
 import Scrollbar from 'react-perfect-scrollbar'
 import { navigations } from 'app/navigations'
 import { MatxVerticalNav } from 'app/components'
@@ -30,6 +31,32 @@ const Sidenav = ({ children }) => {
     const classes = useStyles()
     const { settings, updateSettings } = useSettings()
 
+    const classState = useSelector(state => state.classStore);
+    const {  classList } = classState;
+
+   
+    const newNavigations = navigations.map(item => {
+        if(item.name === 'Teaching')
+        {
+            item.children = [];
+            classList.forEach(element => {
+                item.children.push({
+                    name: element.name,
+                    iconText: element.name[0],
+                    path: `/class/${element._id}`
+                })
+            });
+            return item;
+        }else{
+            return item;
+        }
+    })
+    // useEffect(() => {
+        
+    // }, [classList]);
+
+   
+
     const updateSidebarMode = (sidebarSettings) => {
         let activeLayoutSettingsName = settings.activeLayout + 'Settings'
         let activeLayoutSettings = settings[activeLayoutSettingsName]
@@ -53,7 +80,7 @@ const Sidenav = ({ children }) => {
                 className={clsx('relative px-4', classes.scrollable)}
             >
                 {children}
-                <MatxVerticalNav items={navigations} />
+                <MatxVerticalNav items={newNavigations} />
             </Scrollbar>
 
             <div

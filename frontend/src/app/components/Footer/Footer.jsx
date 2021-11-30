@@ -6,6 +6,7 @@ import useSettings from 'app/hooks/useSettings'
 
 const useStyles = makeStyles(({ palette, ...theme }) => ({
     footer: {
+        backgroundColor:'#18202e',
         minHeight: 'calc(var(--topbar-height) - 25px)',
         '@media (max-width: 499px)': {
             display: 'table',

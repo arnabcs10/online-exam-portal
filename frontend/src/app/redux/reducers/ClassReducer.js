@@ -31,7 +31,7 @@ export const classReducer = (state = initialState, action) => {
         case CLASS_CREATE_REQUEST:
             return { ...state, loading: true, message:null };
         case CLASS_CREATE_SUCCESS:
-            return { loading: false, classList: [...state.classList, action.payload], message:action.message  };
+            return { ...state, loading: false, classList: [...state.classList, action.payload], message:action.message  };
         case CLASS_CREATE_FAIL:
             return { ...state, loading: false, message: action.message };
         case CLASS_DETAILS_REQUEST:

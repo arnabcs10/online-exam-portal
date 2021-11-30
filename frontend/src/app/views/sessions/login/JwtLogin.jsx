@@ -35,8 +35,6 @@ const useStyles = makeStyles(({ palette, ...theme }) => ({
 const JwtLogin = () => {
     const [loading, setLoading] = useState(false)
     const [userInfo, setUserInfo] = useState({
-        // email: 'jason@ui-lib.com',
-        // password: 'dummyPass',
         email: '',
         password: '',
     })
@@ -76,7 +74,7 @@ const JwtLogin = () => {
                         <div className="p-8 flex justify-center items-center h-full">
                             <img
                                 className="w-200"
-                                src="/assets/images/illustrations/dreamer.svg"
+                                src="/assets/images/illustrations/designer.svg"
                                 alt=""
                             />
                         </div>

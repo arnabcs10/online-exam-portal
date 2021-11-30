@@ -123,10 +123,10 @@ const Layout1Topbar = () => {
                         </div> */}
                     </div>
                     <div className="flex items-center">
-                        <MatxSearchBox />
+                        {/* <MatxSearchBox />
                         <NotificationProvider>
                             <NotificationBar />
-                        </NotificationProvider>
+                        </NotificationProvider> */}
 
                         {/* <NotificationBar2 /> */}
 
@@ -137,7 +137,7 @@ const Layout1Topbar = () => {
                                     <Hidden xsDown>
                                         <span>
                                             {/* Hi <strong>User</strong> */}
-                                            Hi <strong>{user.name}</strong>
+                                            <strong>{user.name}</strong>
                                         </span>
                                     </Hidden>
                                     <Avatar
@@ -156,7 +156,7 @@ const Layout1Topbar = () => {
                             <MenuItem>
                                 <Link
                                     className={classes.menuItem}
-                                    to="/page-layouts/user-profile"
+                                    to="/"
                                 >
                                     <Icon> person </Icon>
                                     <span className="pl-4"> Profile </span>
