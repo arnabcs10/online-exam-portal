@@ -7,8 +7,13 @@ import {
     Icon,
     Fab,
     Grid,
-    CardMedia
-} from '@material-ui/core'
+    CardMedia,
+    Table,
+    TableCell,
+    TableBody,
+    TableRow
+} from '@material-ui/core';
+import MatxLoading from 'app/components/MatxLoading/MatxLoading';
 import {getClassDetails} from 'app/redux/actions/ClassActions';
 
 const ClassPage = () => {
@@ -23,6 +28,7 @@ const ClassPage = () => {
     const { loading, message, classDetails } = classState;
     return (
         <div className="analytics m-sm-30">
+            {loading && (<MatxLoading/>)}
             <Grid container spacing={2}>
                 <Grid item md={12} xs={12}>
                     <Card className="mt-1 mb-6" elevation={3}>
@@ -76,17 +82,60 @@ const ClassPage = () => {
                 </Grid>
                 <Grid item md={8} xs={12}>
                     <Card elevation={3} className="h-full">
-                        <div className=" px-4 py-3 mb-6 flex justify-between items-center bg-light-gray">
+                        <div className=" px-4   flex justify-between items-center bg-light-gray">
                             <span className="font-medium text-muted">Class details</span>
-                            <IconButton size="small">
-                                <Icon>more_horiz</Icon>
-                            </IconButton>
+                            
                         </div>
                         
-                        <h5 className="text-center font-medium mb-2">Name</h5>
-                        <p className="m-0 text-muted text-center">
-                            Subject Computer Science
-                        </p>
+                        <div className="w-full overflow-auto px-4 ">
+                            <Table className="whitespace-pre">                    
+                                <TableBody>
+                                   
+                                        <TableRow key="name">
+                                            <TableCell className="px-0" align="left">
+                                                Name:
+                                            </TableCell>
+                                            <TableCell className="px-0" align="left">
+                                               {classDetails.name}
+                                            </TableCell>                                
+                                        </TableRow>
+                                        <TableRow key="section">
+                                            <TableCell className="px-0" align="left">
+                                                Section:
+                                            </TableCell>
+                                            <TableCell className="px-0" align="left">
+                                               {classDetails.section}
+                                            </TableCell>                                
+                                        </TableRow>
+                                        <TableRow key="subject">
+                                            <TableCell className="px-0" align="left">
+                                                Subject:
+                                            </TableCell>
+                                            <TableCell className="px-0" align="left">
+                                               {classDetails.subject}
+                                            </TableCell>                                
+                                        </TableRow>
+                                        <TableRow key="strength">
+                                            <TableCell className="px-0" align="left">
+                                                Strength:
+                                            </TableCell>
+                                            <TableCell className="px-0" align="left">
+                                               {classDetails.strength}
+                                            </TableCell>                                
+                                        </TableRow>
+                                        <TableRow key="description">
+                                            <TableCell className="px-0" align="left">
+                                                Description:
+                                            </TableCell>
+                                            <TableCell className="px-0" align="left">
+                                               {classDetails.description}
+                                            </TableCell>                                
+                                        </TableRow>
+                                  
+                                </TableBody>
+                            </Table>
+                        </div>
+
                     </Card>
                 </Grid>
             </Grid>
