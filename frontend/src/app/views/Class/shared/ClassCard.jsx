@@ -37,7 +37,7 @@ const ClassCard = (props) => {
                                 <p className="m-1 py-1 text-muted">{'Create New Class'}</p>
                             </div>
                         </Card>        
-                </Grid>
+                </Grid>                
                 {loading ? (<MatxLoading/>) :  (
                       <>
                         {classList.map((item, ind) => (

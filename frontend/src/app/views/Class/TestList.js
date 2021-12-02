@@ -1,10 +1,13 @@
 import React,{useState} from 'react'
 import useAuth from 'app/hooks/useAuth'
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom'
 import TestCard from './TestCard'
 
 
 const TestList = () => {
+    const classState = useSelector(state => state.classStore);
+    const { loading, message, classDetails } = classState;
     const {
         isAuthenticated,
         // user
@@ -49,7 +52,7 @@ const TestList = () => {
             <div className="flex justify-between items-center items-center mb-6">
                 <h3 className="m-0">Tests</h3>
             </div>
-            <TestCard testList={testList} />
+            <TestCard testList={testList} classId={classDetails._id} />
 
             
         </div>

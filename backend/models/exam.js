@@ -9,7 +9,7 @@ const examSchema = mongoose.Schema({
     // },
     groupId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Group',
+        ref:'group',
         required:true,
     },
     name:{
@@ -30,11 +30,26 @@ const examSchema = mongoose.Schema({
     duration:{
         type:Number,
     },
-    questionPaperId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'QuestionPaper',
+    // questionPaperId:{
+    //     type:mongoose.Schema.Types.ObjectId,
+    //     ref:'QuestionPaper',
+    //     required:true,
+    // }
+    totalMarks:{
+        type:Number,
         required:true,
-    }
+    },
+    numberOfQuestions:{
+        type:Number,
+        required:true
+    },
+    questions:[
+        {
+            questionNumber:{type:Number},
+            text:{ type: String, required:true},
+            mark:{type: Number, required:true}
+        }
+    ]
     
 },{
     timestamps:true

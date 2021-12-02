@@ -23,7 +23,7 @@ const groupSchema = mongoose.Schema({
     examinerId:{
         type:mongoose.Schema.Types.ObjectId,
         required:true,
-        ref:'Examiner'
+        ref:'examiner'
     },
     strength:{
         type:Number
@@ -37,7 +37,7 @@ const groupSchema = mongoose.Schema({
     examsTaken:[
         {
             type:mongoose.Schema.Types.ObjectId,
-            ref:'Exam'
+            ref:'exam'
         }
     ]
     

@@ -4,12 +4,12 @@ const mongoose = require('mongoose');
 const answereSheetSchema = mongoose.Schema({
     studentId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Student',
+        ref:'student',
         required:true,
     },
     examId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Exam',
+        ref:'exam',
         required:true,
     },
     marks:{

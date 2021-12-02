@@ -1,13 +1,16 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { Grid, Card, Icon, Fab } from '@material-ui/core'
+
 
 const TestCard = (props) => {
     
-    const { testList } = props;
+    const { testList, classId } = props;
     return (
         <div>
             <Grid container spacing={3}>
                 <Grid key={'Create New Class'} item md={3} sm={6} xs={12}>
+                    <Link to={`/class/${classId}/test/edit`}>
                         <Card 
                             elevation={3} 
                             className="p-4 flex-column items-center"
@@ -24,7 +27,8 @@ const TestCard = (props) => {
                             <div className="ml-4">
                                 <p className="m-1 py-1 text-muted">Create New Test</p>
                             </div>
-                        </Card>        
+                        </Card> 
+                        </Link>
                 </Grid>
                 {testList.map((item, ind) => (
                     <Grid key={item.name} item md={3} sm={6} xs={12}>
