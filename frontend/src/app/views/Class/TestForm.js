@@ -51,12 +51,37 @@ const TestForm = () => {
             questions.push({
                 qid:uuid(),
                 text:'',
+                answer:'',
                 mark: 0
             })
-            return {...state, numberOfQuestions: state.numberOfQuestions+1, questions};
+            return {...state, numberOfQuestions: questions.length, questions};
         });
     }
 
+    const updateAndSaveQuestion = (ques) => {
+        setState(state => {
+            let countMarks = 0;
+            const questions = state.questions.map(q => {
+                if(q.qid === ques.qid){
+                    countMarks+= ques.mark;
+                    return ques;
+                }else{
+                    countMarks+= q.mark;
+                    return q;
+                }
+            });
+            
+            return {...state,totalMarks:countMarks, questions};
+        });
+
+    }
+    const deleteQuestion = (ques) => {
+        setState(state => {
+            const questions = state.questions.filter((q) => q.qid !== ques.qid);
+            
+            return {...state,totalMarks:state.totalMarks-ques.mark, numberOfQuestions: questions.length, questions};
+        });
+    }
     const handleChange = (event) => {
         event.persist()
         setState({
@@ -208,7 +233,11 @@ const TestForm = () => {
                     <Grid item md={12} xs={12} key={que.qid}>
                         <SimpleCard elevation={3} className="h-full" title={`Question: ${index+1}`}>  
                             
-                            <QuestionCard />
+                            <QuestionCard 
+                                qid={que.qid} 
+                                updateAndSaveQuestion={updateAndSaveQuestion}
+                                deleteQuestion={deleteQuestion}
+                            />
                                                     
                         </SimpleCard>                  
                     </Grid>
