@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 import { v4 as uuid } from 'uuid';
+import xlsx from 'xlsx';
 import {
     MuiPickersUtilsProvider,
     KeyboardDateTimePicker,
@@ -41,7 +42,13 @@ const TestForm = () => {
         numberOfQuestions: 0,
         questions:[]
     });
-  
+    const [fileName, setFileName] = useState('');
+    const [questionSheet, setQuestionSheet] = useState({
+        questionsArray:[],
+        sumMarks:0,
+        totalQuestions:0
+    });
+
     const classState = useSelector(state => state.classStore);
     const { loading, message, classDetails } = classState;
 
@@ -111,7 +118,77 @@ const TestForm = () => {
             numberOfQuestions: 0,
             questions:[]
         });
-        // handleSheetCancel();
+        handleSheetCancel();
+    }
+    const inputExcel = (event) =>{
+        console.log(event.target.files[0]);
+        if(!event.target.files[0])
+            return;
+        setFileName(event.target.files[0].name);
+        let fileReader = new FileReader();
+        fileReader.readAsBinaryString(event.target.files[0]);
+        fileReader.onload = (event)=>{
+            let data = event.target.result;
+            let workbook = xlsx.read(data,{type:"binary"});
+            workbook.SheetNames.forEach(sheet => {
+                let rowObject = xlsx.utils.sheet_to_row_object_array(workbook.Sheets[sheet]);
+
+                console.log(rowObject);
+                if(!rowObject[0].question && !rowObject[0].answer && !rowObject[0].mark){
+                    console.log("invalid file format");
+                    return;
+                }
+                // NOTE: Incase of MCQ format needs to be changed [...st,...arrayQuestions]
+                const arrayQuestions = [];
+                let sum = 0;
+                rowObject.forEach(element => {
+                    const obj = {
+                        text: element.question,
+                        answer: element.answer,
+                        mark: element.mark,
+                        qid: uuid()
+                    }
+                    sum+= element.mark;
+                    arrayQuestions.push(obj);
+                })
+                const numQues = arrayQuestions.length;
+                setQuestionSheet(st => {
+                    return {
+                        questionsArray:[...arrayQuestions],
+                        sumMarks:sum,
+                        totalQuestions:numQues
+                    }
+                });
+            });
+        }
+    }
+    const handleSheetSubmit = ()=>{
+        
+        console.log(questionSheet);
+        setState(st => {
+            return {
+                ...st,
+                totalMarks: st.totalMarks+questionSheet.sumMarks,
+                numberOfQuestions: st.numberOfQuestions+questionSheet.totalQuestions,
+                questions:[
+                    ...st.questions,
+                    ...questionSheet.questionsArray
+                ]
+            }
+        });
+
+        // flush out studentarray state
+        // setQuestionsArray([]);
+        // flush out xl file - may be not needed
+        // setFileName("");
+    }
+    const handleSheetCancel = ()=>{
+        setQuestionSheet({
+            questionsArray:[],
+            sumMarks:0,
+            totalQuestions:0
+        });
+        setFileName("");
     }
     return (
         <div className="analytics m-sm-30">
@@ -235,6 +312,9 @@ const TestForm = () => {
                             
                             <QuestionCard 
                                 qid={que.qid} 
+                                text={que.text}
+                                answer={que.answer}
+                                mark={que.mark}
                                 updateAndSaveQuestion={updateAndSaveQuestion}
                                 deleteQuestion={deleteQuestion}
                             />
@@ -258,17 +338,17 @@ const TestForm = () => {
                         <div className="text-center font-medium mb-6">
                             Or Select a spreadsheet
                             <br />
-                            <div className="text-muted text-small pb-1 inline-block">file: {'fileName'}</div>
+                            <div className="text-muted text-small pb-1 inline-block">file: {fileName}</div>
                                 <div className="flex justify-center my-7">
                                     
                                     <Button component="label" color="primary" variant="outlined"> 
                                         <Icon>file_upload</Icon> 
                                         <input hidden type="file" id="input-excel" accept=".xls,.xlsx" 
-                                        // onChange = {inputExcel} 
+                                        onChange = {inputExcel} 
                                         color="primary" variant="contained" />
                                     </Button>
                                     <Button className="mx-4" 
-                                        // onClick={handleSheetSubmit}  
+                                        onClick={handleSheetSubmit}  
                                         variant="contained" 
                                         color="primary">
                                             Submit
@@ -276,7 +356,7 @@ const TestForm = () => {
                                     <Button
                                         variant="outlined"
                                         color="secondary"
-                                        // onClick={handleSheetCancel}
+                                        onClick={handleSheetCancel}
                                     >
                                         Cancel
                                     </Button>

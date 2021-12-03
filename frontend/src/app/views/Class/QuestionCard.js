@@ -11,12 +11,12 @@ import {
 } from '@material-ui/core'
 const QuestionCard = (props) => {
     const { qid, deleteQuestion, updateAndSaveQuestion } = props;
-    const [isSaved, setIsSaved] = useState(false);
+    const [isSaved, setIsSaved] = useState(props.text.length > 0 ? true : false);
     const [type, setType] = useState('sa');
     const [state, setState] = useState({
-        text:'',
-        answer:'',
-        mark: 0,
+        text:props.text || '',
+        answer:props.answer || '',
+        mark: props.mark || 0,
     });
 
     const handleChange = (event) => {
