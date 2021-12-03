@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
-
+import { v4 as uuid } from 'uuid';
 import {
     MuiPickersUtilsProvider,
     KeyboardDateTimePicker,
@@ -26,39 +26,110 @@ import {
     Select,
     MenuItem,
 } from '@material-ui/core'
-
+import QuestionCard from './QuestionCard';
 import { SimpleCard } from 'app/components'
 
 
 const TestForm = () => {
     const [state, setState] = useState({
-        date: new Date(),
-    })
+        name:'',
+        description:'',
+        startTime: new Date(),
+        endTime: new Date(),
+        duration: 60,
+        totalMarks: 0,
+        numberOfQuestions: 0,
+        questions:[]
+    });
   
     const classState = useSelector(state => state.classStore);
     const { loading, message, classDetails } = classState;
 
-    const handleDateChange = (date) => {
-        setState({ ...state, date })
+    const addQuestion = () => {
+        setState(state => {
+            const questions = state.questions.map(ques => ques);
+            questions.push({
+                qid:uuid(),
+                text:'',
+                mark: 0
+            })
+            return {...state, numberOfQuestions: state.numberOfQuestions+1, questions};
+        });
+    }
+
+    const handleChange = (event) => {
+        event.persist()
+        setState({
+            ...state,
+            [event.target.name]: event.target.value,
+        })
+    }
+    const handleStartTimeChange = (startTime) => {
+        setState({ ...state, startTime })
+    }
+    const handleEndTimeChange = (endTime) => {
+        setState({ ...state, endTime })
+    }
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        console.log("submitted");
+        console.log(state);
+        // dispatch();
+        
+        setState({
+            name:'',
+            description:'',
+            startTime: new Date(),
+            endTime: new Date(),
+            duration: 60,
+            totalMarks: 0,
+            numberOfQuestions: 0,
+            questions:[]
+        });
+        // handleSheetCancel();
     }
     return (
         <div className="analytics m-sm-30">
             <Container maxWidth="md">
+            <ValidatorForm onSubmit={handleSubmit}>
             <Grid container spacing={2}>
                
                 <Grid item md={12} xs={12} sx={{ width: '75%' }}>
                     <SimpleCard elevation={3} className="h-full" title="Test Paper">
                         
-                        <TextField className="mb-4 w-full"  id="test-name" label="Name" variant="standard" />
-                        <TextField
+                        {/* <TextField className="mb-4 w-full"  id="test-name" label="Name" variant="standard" /> */}
+                        <TextValidator
+                            className="mb-4 w-full"
+                            label="Name"
+                            onChange={handleChange}
+                            type="text"
+                            name="name"
+                            value={state.name || ''}
+                            validators={[
+                                'required',
+                            ]}
+                            errorMessages={['this field is required']}
+                        />
+                        {/* <TextField
                             id="test-description"
                             label="Description"
                             placeholder="instructions..."
                             multiline
                             variant="standard"
                             className="mb-4 w-full"
-                            />
+                            /> */}
                        
+                       <TextValidator
+                            className="mb-4 w-full"
+                            label="Description"
+                            onChange={handleChange}
+                            type="text"
+                            placeholder="instructions..."
+                            multiline
+                            name="description"
+                            value={state.description || ''}
+                           
+                        />                        
                         <Grid container spacing={2}>
                         <Grid item md={4} xs={12}>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -71,8 +142,8 @@ const TestForm = () => {
                                 inputVariant="standard"
                                 type="text"
                                 autoOk={true}
-                                value={state.date}
-                                onChange={handleDateChange}
+                                value={state.startTime}
+                                onChange={handleStartTimeChange}
                                 KeyboardButtonProps={{
                                     'aria-label': 'change date',
                                 }}
@@ -90,8 +161,8 @@ const TestForm = () => {
                                 inputVariant="standard"
                                 type="text"
                                 autoOk={true}
-                                value={state.date}
-                                onChange={handleDateChange}
+                                value={state.endTime}
+                                onChange={handleEndTimeChange}
                                 KeyboardButtonProps={{
                                     'aria-label': 'change date',
                                 }}
@@ -100,19 +171,28 @@ const TestForm = () => {
                         </Grid>
 
                         <Grid item md={4} xs={12}>
-                            <TextField className="mb-4 w-full"  id="test-duration" label="duration(in mins)" variant="standard" />
+                            {/* <TextField className="mb-4 w-full"  id="test-duration" label="duration(in mins)" variant="standard" /> */}
+                            <TextValidator
+                            className="mb-4 w-full"
+                            label="duration(in mins)"
+                            onChange={handleChange}
+                            type="number"
+                            name="duration"
+                            value={state.duration || 60}
+                          
+                        />
                         </Grid>
 
                         <Grid item md={8} xs={12}>
-                            Number of Questions: {5}
+                            Number of Questions: {state.numberOfQuestions}
                         </Grid>
 
                         <Grid item md={4} xs={12}>
-                            Total marks: {10}
+                            Total marks: {state.totalMarks}
                         </Grid>
 
                         <Grid item md={12} className="text-right">
-                            <Button color="primary" variant="contained" >
+                            <Button color="primary" variant="contained" type="submit">
                                 Publish
                                 <Icon className="ml-2">
                                     send
@@ -124,44 +204,20 @@ const TestForm = () => {
                     </SimpleCard>
                 </Grid>
 
-                <Grid item md={12} xs={12}>
-                    <SimpleCard elevation={3} className="h-full" title={`Question: ${1}`}>  
-                        <Grid container spacing={2}>
-                            <Grid item md={8} xs={12}>
-                                <TextField className="mb-4 w-full"  id="test-Question" label="Question" variant="standard" />
-                            </Grid>
-                            <Grid item md={4} xs={12}>
-                                <InputLabel id="question-type">Type</InputLabel>
-                                <Select
-                                    labelId="question-type"
-                                    id="type"
-                                    // value={age}
-                                    // onChange={handleChange}
-                                    label="type"
-                                    className="mb-4 w-full"
-                                    >
-                                    
-                                    <MenuItem value={'text'}>Short answer</MenuItem>
-                                    <MenuItem value={'mcq'}>Multiple Choice</MenuItem>
-                                </Select>
-                            </Grid>
-                            <Grid item md={9} xs={12}>
-                                <TextField className="mb-4 w-full"  id="answer-key" label="Answer Key" variant="standard" />
-                            </Grid>
-                            <Grid item md={2} xs={12}>
-                                <TextField className="mb-4 ml-2 w-full"  id="points" label="Marks" variant="standard" />
-                            </Grid>
-                            <Grid item md={1} xs={12}>
-                                <Icon className="mt-6 ml-2 cursor-pointer" color="error" variant="contained" >delete</Icon> 
-                            </Grid>
-                        </Grid>
-                    </SimpleCard>                  
-                </Grid>
+                {state.questions.map((que,index) => (
+                    <Grid item md={12} xs={12} key={que.qid}>
+                        <SimpleCard elevation={3} className="h-full" title={`Question: ${index+1}`}>  
+                            
+                            <QuestionCard />
+                                                    
+                        </SimpleCard>                  
+                    </Grid>
+                ))}
 
                 <Grid item md={12} xs={12}>
                     <Card elevation={3} className="h-full text-center">
                         <div className=" px-4 py-3 mb-3   items-center bg-light-gray">
-                            <Button color="primary">
+                            <Button color="primary" onClick={addQuestion}>
                                 <Icon>
                                     add
                                 </Icon>
@@ -205,7 +261,7 @@ const TestForm = () => {
                 
                
             </Grid>
-
+            </ValidatorForm >
             </Container>
         </div>
     )
