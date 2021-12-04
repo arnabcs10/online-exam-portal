@@ -42,11 +42,21 @@ export default function ClassFormDialog(props) {
             [event.target.name]: event.target.value,
         })
     }
+    const handleBeforeClose = () =>{
+        handleClose();
+        setState({
+            name:"",
+            section:"",
+            subject:"",
+            description:""
+        });
+        
+    }
     return (
         
             <Dialog
                 open={open}
-                onClose={handleClose}
+                onClose={handleBeforeClose}
                 aria-labelledby="form-dialog-title"
                 
             >
@@ -101,7 +111,7 @@ export default function ClassFormDialog(props) {
                     <Button
                         variant="outlined"
                         color="secondary"
-                        onClick={handleClose}
+                        onClick={handleBeforeClose}
                     >
                         Cancel
                     </Button>

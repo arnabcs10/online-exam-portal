@@ -16,7 +16,7 @@ const QuestionCard = (props) => {
     const [state, setState] = useState({
         text:props.text || '',
         answer:props.answer || '',
-        mark: props.mark || 0,
+        mark: props.mark || '',
     });
 
     const handleChange = (event) => {

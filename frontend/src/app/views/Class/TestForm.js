@@ -37,7 +37,7 @@ const TestForm = () => {
         description:'',
         startTime: new Date(),
         endTime: new Date(),
-        duration: 60,
+        duration: '',
         totalMarks: 0,
         numberOfQuestions: 0,
         questions:[]
@@ -91,9 +91,14 @@ const TestForm = () => {
     }
     const handleChange = (event) => {
         event.persist()
+        let val = event.target.value;
+        if(event.target.name === 'duration')
+        {
+            val = Number(val);
+        }
         setState({
             ...state,
-            [event.target.name]: event.target.value,
+            [event.target.name]: val,
         })
     }
     const handleStartTimeChange = (startTime) => {
@@ -113,7 +118,7 @@ const TestForm = () => {
             description:'',
             startTime: new Date(),
             endTime: new Date(),
-            duration: 60,
+            duration: '',
             totalMarks: 0,
             numberOfQuestions: 0,
             questions:[]
@@ -280,7 +285,7 @@ const TestForm = () => {
                             onChange={handleChange}
                             type="number"
                             name="duration"
-                            value={state.duration || 60}
+                            value={state.duration}
                           
                         />
                         </Grid>
@@ -337,6 +342,8 @@ const TestForm = () => {
                         
                         <div className="text-center font-medium mb-6">
                             Or Select a spreadsheet
+                            <br />
+                            <div className="text-muted text-small pb-1 inline-block">Make sure you have the first row with column names as "question","answer" and "mark"</div>
                             <br />
                             <div className="text-muted text-small pb-1 inline-block">file: {fileName}</div>
                                 <div className="flex justify-center my-7">
