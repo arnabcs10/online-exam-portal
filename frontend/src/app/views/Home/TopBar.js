@@ -1,21 +1,19 @@
 import React from 'react'
 import {
     Icon,
-    IconButton,
     MenuItem,
     Avatar,
     useMediaQuery,
     Hidden,
+    Button,
 } from '@material-ui/core'
-import { MatxMenu, MatxSearchBox } from 'app/components'
-
+import { MatxMenu } from 'app/components'
 import { Link } from 'react-router-dom'
 import Brand from '../../components/Brand/Brand'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import clsx from 'clsx'
 import useAuth from 'app/hooks/useAuth'
 import useSettings from 'app/hooks/useSettings'
-import { NotificationProvider } from 'app/contexts/NotificationContext'
 
 const useStyles = makeStyles(({ palette, ...theme }) => ({
     topbar: {
@@ -150,7 +148,12 @@ const Layout1Topbar = () => {
                                     </MenuItem>
                                 </MatxMenu>
                             :
-                            <div><Link to='/session/signin'>SignIn</Link></div>
+                            <div><Link to='/session/signin'>
+                                <Button variant="outlined" style={{color:"white", backgroundColor:"#18202e"}}>
+                                    Sign In
+                                </Button>
+                                </Link>
+                            </div>
                             )
                         }
                         
