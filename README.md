@@ -1,7 +1,7 @@
 # Online Exam Portal
 
  <p align="center">
-	 <img src="preview/ss_webportal.png"></img>
+	 <img src="preview/ss_webportal.PNG"></img>
  </p>
 
 ## Description
