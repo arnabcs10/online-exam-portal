@@ -48,7 +48,7 @@ const Home = () => {
                             Where teaching and learning come together
                         </Typography>
                         <Typography variant="subtitle1" gutterBottom component="div">
-                            Google Classroom is your all-in-one place for teaching and learning. Our easy-to-use and secure tool helps educators manage, measure, and enrich learning experiences.
+                            Our Classroom is your all-in-one place for teaching and learning. Our easy-to-use and secure tool helps educators manage, measure, and enrich learning experiences.
                         </Typography>
                     
                         <br />
