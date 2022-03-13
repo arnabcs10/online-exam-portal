@@ -58,7 +58,7 @@ const Footer = () => {
                         <span className="m-auto"></span>
                         <p className="m-0">
                             Design and Developed by{' '}
-                            <a href="https://github.com/arnabcs10">@arnabcs10</a>
+                            <a href="https://github.com/arnabcs10">Group 10</a>
                         </p>
                     </div>
                 </Toolbar>
