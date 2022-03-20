@@ -35,8 +35,8 @@ const TestForm = () => {
     const [state, setState] = useState({
         name:'',
         description:'',
-        startTime: new Date(),
-        endTime: new Date(),
+        startTime: new Date().toString(),
+        endTime: new Date().toString(),
         duration: '',
         totalMarks: 0,
         numberOfQuestions: 0,
@@ -102,22 +102,22 @@ const TestForm = () => {
         })
     }
     const handleStartTimeChange = (startTime) => {
-        setState({ ...state, startTime })
+        setState({ ...state, startTime: startTime.toString() });
     }
     const handleEndTimeChange = (endTime) => {
-        setState({ ...state, endTime })
+        setState({ ...state, endTime: endTime.toString()  });
     }
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log("submitted");
-        console.log(state);
+        console.log({...state, groupId: classDetails._id});
         // dispatch();
         
         setState({
             name:'',
             description:'',
-            startTime: new Date(),
-            endTime: new Date(),
+            startTime: new Date().toString(),
+            endTime: new Date().toString(),
             duration: '',
             totalMarks: 0,
             numberOfQuestions: 0,
@@ -249,6 +249,7 @@ const TestForm = () => {
                                 inputVariant="standard"
                                 type="text"
                                 autoOk={true}
+                                disablePast={true}
                                 value={state.startTime}
                                 onChange={handleStartTimeChange}
                                 KeyboardButtonProps={{
@@ -268,6 +269,7 @@ const TestForm = () => {
                                 inputVariant="standard"
                                 type="text"
                                 autoOk={true}
+                                disablePast={true}
                                 value={state.endTime}
                                 onChange={handleEndTimeChange}
                                 KeyboardButtonProps={{
