@@ -1,17 +1,24 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import useAuth from 'app/hooks/useAuth'
 import { useDispatch, useSelector } from 'react-redux';
+import {listExams} from 'app/redux/actions/ExamActions';
 import { Link } from 'react-router-dom'
 import TestCard from './TestCard'
-
+import Message from './CustomSnackbar';
 
 const TestList = () => {
     const classState = useSelector(state => state.classStore);
-    const { loading, message, classDetails } = classState;
+    const { classDetails } = classState;
     const {
         isAuthenticated,
         // user
     } = useAuth()
+    const dispatch = useDispatch();
+    const examState = useSelector(state => state.examStore);
+    const { loading, message, examList } = examState;
+    useEffect(() => {
+        dispatch(listExams(classDetails._id));
+    }, [dispatch]);
     const testList = [
         {
             icon: 'assignment',
@@ -52,7 +59,8 @@ const TestList = () => {
             <div className="flex justify-between items-center items-center mb-6">
                 <h3 className="m-0">Tests</h3>
             </div>
-            <TestCard testList={testList} classId={classDetails._id} />
+            {message && (<Message variant={message.variant} message={message.content}/>)}
+            <TestCard testList={examList} loading={loading} classId={classDetails._id} />
 
             
         </div>
