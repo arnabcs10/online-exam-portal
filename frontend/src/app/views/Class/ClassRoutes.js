@@ -2,9 +2,15 @@ import React from 'react'
 import { authRoles } from '../../auth/authRoles'
 
 const ClassRoutes = [
+    
     {
         path: '/class/:classId/test/edit',
         component: React.lazy(() => import('./TestForm')),
+        auth: authRoles.sa,
+    },
+    {
+        path: '/class/:classId/test/:testId',
+        component: React.lazy(() => import('./TestDashboard')),
         auth: authRoles.sa,
     },
     {

@@ -34,6 +34,7 @@ const TestCard = (props) => {
                 <>
                 {testList.map((item, ind) => (
                     <Grid key={item._id} item md={3} sm={6} xs={12}>
+                        <Link to={`/class/${classId}/test/${item._id}`}>
                         <Card elevation={3} className="p-4" style={{cursor:"pointer"}}>
                             <div className="flex items-center">
                                 <Fab
@@ -53,6 +54,7 @@ const TestCard = (props) => {
                                 <span className="text-13 text-green ml-1">marks: {item.totalMarks}</span>
                             </div>
                         </Card>
+                        </Link>
                     </Grid>
                 ))}
                 </>
