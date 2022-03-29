@@ -5,6 +5,7 @@ import { v4 as uuid } from 'uuid';
 
 import 'date-fns'
 import {
+    Paper,
     Card,
     Button,
     Icon,
@@ -18,11 +19,17 @@ import {
     IconButton,
     TableRow,
 } from '@material-ui/core';
+import MatxLoading from 'app/components/MatxLoading/MatxLoading';
+import Message from './CustomSnackbar';
 import TestPaperPanel from './TestPaperPanel';
 import { SimpleCard } from 'app/components'
-
+import {getExamDetails} from 'app/redux/actions/ExamActions';
 
 const TestDashboard = () => {
+    const dispatch = useDispatch();
+    const {classId, testId} = useParams();
+    
+    
     const questions = [{
         qid:uuid(),
         text:'Given a string s and a dictionary of strings wordDict, return true if s can be segmented into a space-separated sequence of one or more dictionary words. Note that the same word in the dictionary may be reused multiple times in the segmentation',
@@ -54,12 +61,16 @@ const TestDashboard = () => {
     });
 
     const classState = useSelector(state => state.classStore);
-    const { loading, message, classDetails } = classState;
+    const {  classDetails } = classState;
 
     
-
+    const examState = useSelector(state => state.examStore);
+    const { loading, message, examDetails } = examState;
     
-  
+    useEffect(() => {
+        if(!examDetails || examDetails._id != testId)
+            dispatch(getExamDetails(testId));
+    }, [dispatch,testId]);
     
     
     const handleSubmit = (event) => {
@@ -81,51 +92,68 @@ const TestDashboard = () => {
        
     }
     
+    let st = new Date(examDetails.startTime);
+    st = examDetails.startTime.slice(0, 10) + ' ' + st.toLocaleTimeString();
+
+    let et = new Date(examDetails.endTime);
+    et = examDetails.endTime.slice(0, 10) + ' ' + et.toLocaleTimeString();
     
-    
-    return (
+    return (loading ? (<MatxLoading/>):(
         <div className="analytics m-sm-30">
+            {message && (<Message variant={message.variant} message={message.content}/>)}
             <Container maxWidth="md">
             <Grid container spacing={2}>
                
                 <Grid item md={12} xs={12} sx={{ width: '75%' }}>
-                    <SimpleCard elevation={3} className="h-full" title="Test Paper">
+                    <SimpleCard elevation={3} className="h-full" title={examDetails.name}>
                         
                         <p>
-                        End-term exam for the course IR (UCS07E11) is scheduled on 10.12.2021.
-
-                        The maximum mark of the examination is 50 and duration is 2 hrs. The examination will be conducted through Pen & Paper Mode. I will share the question paper in the google classroom under the “Test” tab before 5 minutes of the scheduled time.
-
-                        The paper will include objective and descriptive type questions. You have to write answers on your own copy. Then you scan all the answer sheets, prepare a single PDF file and submit it to the same link where question paper is uploaded. 
-
-                        During your examination you have also to be logged in to the following Google meet link with your camera ON (follow separate link for NIT and IIIT students). During examination, observers from the examination section will also join for invigilation.
+                        {examDetails.description}
                         </p>
                                                
                      
                         <Grid container spacing={2}>
-                        <Grid item md={4} xs={12} >     
-                                                   
-                          <span className="font-bold"><Icon className='pt-1 mr-2 '>event</Icon>Start Time: </span> March 23rd 08:07 p.m.
+                        <Grid item md={5} xs={12} >     
+                        {/* <Icon className='pt-1 mr-2 '>event</Icon> */}
+                  
+                          <span className="font-bold">Start Time: </span> {st}
                         </Grid>
                         <Grid item md={4} xs={12}>
                         
-                        <span className="font-bold"><Icon className='pt-1 mr-2 '>event</Icon>End Time: </span> March 23rd 08:07 p.m.
+                        <span className="font-bold">End Time: </span> {et}
                         </Grid>
 
-                        <Grid item md={4} xs={12}>
+                        <Grid item md={3} xs={12}>
                         
-                        <span className="font-bold"><Icon className='pt-1 mr-2 '>schedule</Icon>Duration: </span> 120 minutes.
+                        <span className="font-bold">Duration: </span> {examDetails.duration} minutes
                         </Grid>
 
-                        <Grid item md={8} xs={12}>
-                        <span className="font-bold">Number of Questions: </span> {state.numberOfQuestions}
+                        <Grid item md={9} xs={12}>
+                        <span className="font-bold">Number of Questions: </span> {examDetails.numberOfQuestions}
                         </Grid>
 
-                        <Grid item md={4} xs={12}>
-                        <span className="font-bold">Total marks: </span> {state.totalMarks}
+                        <Grid item md={3} xs={12}>
+                        <span className="font-bold">Total marks: </span> {examDetails.totalMarks}
                         </Grid>
 
-                        <Grid item md={12} className="text-right">
+                        <Grid item md={8} xs={12} style={{height:"50%"}}>
+                                <Paper elevation={3} 
+                                    className="p-2"
+                                    style={{
+                                        display:"flex", 
+                                        backgroundColor:"#e0e0e0"                                        
+                                    }}
+                                >
+                                    <div style={{width:"100%"}}>
+                                    {"http://localhost:3000/class/61a09cca1e1973421e5d3df3/test/6241826aa3fbbdb9543a4767".slice(0,70) + "..."}
+                                    </div>
+                                    <Icon >
+                                        content_copy
+                                    </Icon> 
+                                </Paper>                                                    
+                        </Grid>
+
+                        <Grid item md={4} className="text-right">
                             <Button color="primary" variant="outlined" >
                                 Fetch Results
                                 <Icon className="ml-2">
@@ -145,7 +173,7 @@ const TestDashboard = () => {
                 </Grid>
                 <Grid item md={12} xs={12} >
                 <SimpleCard elevation={3} className="h-full" title="Question Paper">
-                  <TestPaperPanel questions={questions}/>                  
+                  <TestPaperPanel name={examDetails.name} questions={examDetails.questions}/>                  
                 </SimpleCard>
                 </Grid>
 
@@ -239,7 +267,7 @@ const TestDashboard = () => {
             </Grid>
             </Container>
         </div>
-    )
+    ))
 }
 
 export default TestDashboard

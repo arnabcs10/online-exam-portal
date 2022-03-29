@@ -58,7 +58,7 @@ const QuestionCard = (props) => {
 }
 
 const TestPaperPanel = (props) => {
-    const { questions } = props;
+    const { questions, name } = props;
   return (
     <Accordion>
         <AccordionSummary
@@ -67,11 +67,11 @@ const TestPaperPanel = (props) => {
             id="panel1a-header"
         >
             <Typography className="">
-                Test Paper 1
+                {name}
             </Typography>
         </AccordionSummary>
         <div style={{backgroundColor :"#e0e0e0"}}>
-            {questions.map((que,index) => (
+            {questions && questions.map((que,index) => (
                 <AccordionDetails key={que.qid}>
                 <Grid item md={12} xs={12} >
                     <SimpleCard elevation={3} className="h-full" title={`Question: ${index+1}`}>  

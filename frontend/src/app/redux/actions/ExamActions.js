@@ -14,8 +14,9 @@ export const EXAM_DETAILS_FAIL = 'EXAM_DETAILS_FAIL';
 
 export const listExams = (groupId) => async (dispatch) =>{
     try{
+        
         dispatch({ type: EXAM_LIST_REQUEST });
-
+        
         const { data } = await axios.get(`/api/exams/all/${groupId}`);
         
         dispatch({ type: EXAM_LIST_SUCCESS, payload: data })
@@ -34,13 +35,15 @@ export const listExams = (groupId) => async (dispatch) =>{
 
 export const createExam = (examDetails) => async (dispatch) => {
     try {
+        console.log("before request");
         dispatch({
             type: EXAM_CREATE_REQUEST,
         });
 
-
+        
         const {data } = await axios.post(`/api/exams`, examDetails);
-
+        console.log("after request");
+        localStorage.setItem('examDetails', JSON.stringify(data));
 
         dispatch({
             type: EXAM_CREATE_SUCCESS,

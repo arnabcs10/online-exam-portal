@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 import { v4 as uuid } from 'uuid';
@@ -27,11 +27,18 @@ import {
     Select,
     MenuItem,
 } from '@material-ui/core'
+import Message from './CustomSnackbar';
+import MatxLoading from 'app/components/MatxLoading/MatxLoading';
 import QuestionCard from './QuestionCard';
-import { SimpleCard } from 'app/components'
+import AlertDialog from './AlertDialog';
+import { SimpleCard } from 'app/components';
+import {createExam} from 'app/redux/actions/ExamActions';
 
 
 const TestForm = () => {
+    const history = useHistory();
+    const dispatch = useDispatch();
+
     const [state, setState] = useState({
         name:'',
         description:'',
@@ -48,9 +55,19 @@ const TestForm = () => {
         sumMarks:0,
         totalQuestions:0
     });
+    // Alert Dialog logic
+    const [alertDialog, setAlertDialog] = useState({
+        isOpen : false,
+        title: "",
+        content: ""
+    });
+    
 
     const classState = useSelector(state => state.classStore);
-    const { loading, message, classDetails } = classState;
+    const { classDetails } = classState;
+
+    const examState = useSelector(state => state.examStore);
+    const { loading, message, examDetails } = examState;
 
     const addQuestion = () => {
         setState(state => {
@@ -107,23 +124,51 @@ const TestForm = () => {
     const handleEndTimeChange = (endTime) => {
         setState({ ...state, endTime: endTime.toString()  });
     }
+
+    useEffect(()=>{
+        if(examDetails && message && message.variant === 'success')
+        {
+            let path = `/class/${classDetails._id}/test/${examDetails._id}`;
+            history.push(path);
+        }
+    },[history,examDetails]);
+
+    const handleConfirmSubmit = () =>{
+        console.log("submitted");
+        let examData = {...state, groupId: classDetails._id};
+        console.log(examData);
+        dispatch(createExam(examData));
+        
+        
+        // if(!loading && message && message.variant === 'success')
+        // {
+        //     setState({
+        //         name:'',
+        //         description:'',
+        //         startTime: new Date().toString(),
+        //         endTime: new Date().toString(),
+        //         duration: '',
+        //         totalMarks: 0,
+        //         numberOfQuestions: 0,
+        //         questions:[]
+        //     });
+        //     handleSheetCancel();
+
+        //     let path = `/class/${classDetails._id}/test/${examDetails._id}`;
+        //     history.push(path);
+        // }
+        
+    }
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log("submitted");
-        console.log({...state, groupId: classDetails._id});
-        // dispatch();
         
-        setState({
-            name:'',
-            description:'',
-            startTime: new Date().toString(),
-            endTime: new Date().toString(),
-            duration: '',
-            totalMarks: 0,
-            numberOfQuestions: 0,
-            questions:[]
+        setAlertDialog({
+            isOpen: true,
+            title: "Are you sure?",
+            content: "You will not be able make any changes after submission. Please click confirm to proceed.",
+            onConfirm: handleConfirmSubmit
         });
-        handleSheetCancel();
+        
     }
     const inputExcel = (event) =>{
         console.log(event.target.files[0]);
@@ -195,8 +240,13 @@ const TestForm = () => {
         });
         setFileName("");
     }
-    return (
+    return (loading ? (<MatxLoading/>):(
         <div className="analytics m-sm-30">
+            <AlertDialog 
+                alertDialog={alertDialog}
+                setAlertDialog={setAlertDialog}                
+            />
+            {message && (<Message variant={message.variant} message={message.content}/>)}
             <Container maxWidth="md">
             <ValidatorForm onSubmit={handleSubmit}>
             <Grid container spacing={2}>
@@ -382,7 +432,7 @@ const TestForm = () => {
             </ValidatorForm >
             </Container>
         </div>
-    )
+    ))
 }
 
 export default TestForm
