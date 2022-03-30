@@ -32,7 +32,8 @@ const useStyles = makeStyles(({ palette, ...theme }) => ({
     },
 }))
 
-const JwtLogin = () => {
+const JwtLogin = (props) => {
+    const { location } = props;
     const [loading, setLoading] = useState(false)
     const [userInfo, setUserInfo] = useState({
         email: '',
@@ -53,7 +54,12 @@ const JwtLogin = () => {
         setLoading(true)
         try {
             await login(userInfo.email, userInfo.password)
-            history.push('/')
+            let path = '/'
+            if(location.state && location.state.redirectUrl)
+            {
+                path = location.state.redirectUrl
+            }
+            history.push(path)
         } catch (e) {
             console.log(e)
             setMessage(e.message)

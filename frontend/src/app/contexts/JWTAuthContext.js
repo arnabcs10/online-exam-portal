@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useReducer } from 'react'
+import { useLocation } from 'react-router-dom'
 import jwtDecode from 'jwt-decode'
 import axios from 'axios.js'
 import { MatxLoading } from 'app/components'
@@ -83,9 +84,17 @@ const AuthContext = createContext({
 
 export const AuthProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
-
+    const { state : st } = useLocation()
+    console.log(st);
+    let keyword = ''
+    if(st && st.redirectUrl)
+    {
+        keyword = st.redirectUrl.split("/")[1] 
+    }
+    
+    let requestPath = keyword === 'assesment' ? '/api/students/login' : '/api/examiners/login'
     const login = async (email, password) => {
-        const response = await axios.post('/api/examiners/login', { 
+        const response = await axios.post(requestPath, { 
             email,
             password,
         })
