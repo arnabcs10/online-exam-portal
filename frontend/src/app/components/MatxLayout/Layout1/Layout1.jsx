@@ -8,6 +8,7 @@ import Layout1Sidenav from './Layout1Sidenav'
 import Footer from '../../Footer/Footer'
 import SecondarySidebar from '../../SecondarySidebar/SecondarySidebar'
 import AppContext from 'app/contexts/AppContext'
+import useAuth from 'app/hooks/useAuth'
 import { MatxSuspense } from 'app/components'
 import { useTheme } from '@material-ui/core/styles'
 import clsx from 'clsx'
@@ -36,6 +37,9 @@ const useStyles = makeStyles(({ palette, ...theme }) => ({
 }))
 
 const Layout1 = () => {
+    const {
+        user
+    } = useAuth()
     const { settings, updateSettings } = useSettings()
     const { layout1Settings, secondarySidebar } = settings
     const {
@@ -44,6 +48,8 @@ const Layout1 = () => {
     const { routes } = useContext(AppContext)
 
     const getSidenavWidth = () => {
+        if(!user.admin)
+            return '0px'
         switch (sidenavMode) {
             case 'full':
                 return 'var(--sidenav-width)'
@@ -76,7 +82,7 @@ const Layout1 = () => {
 
     return (
         <div className={clsx('bg-default', layoutClasses)}>
-            {showSidenav && sidenavMode !== 'close' && (
+            {user.admin && showSidenav && sidenavMode !== 'close' && (
                 <SidenavTheme>
                     <Layout1Sidenav />
                 </SidenavTheme>

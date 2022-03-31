@@ -92,7 +92,8 @@ export const AuthProvider = ({ children }) => {
         keyword = st.redirectUrl.split("/")[1] 
     }
     
-    let requestPath = keyword === 'assesment' ? '/api/students/login' : '/api/examiners/login'
+    let requestPath = keyword === 'assessment' ? '/api/students/login' : '/api/examiners/login'
+    let isAdmin = keyword === 'assessment' ? false : true;
     const login = async (email, password) => {
         const response = await axios.post(requestPath, { 
             email,
@@ -103,7 +104,8 @@ export const AuthProvider = ({ children }) => {
         const user = {
             name: response.data.name,
             email: response.data.email,
-            id: response.data._id
+            id: response.data._id,
+            admin: isAdmin
         }
         setSession(token)
 
@@ -126,7 +128,8 @@ export const AuthProvider = ({ children }) => {
         const user = {
             name: response.data.name,
             email: response.data.email,
-            id: response.data._id
+            id: response.data._id,
+            admin: true
         }
         setSession(token)
 
@@ -154,7 +157,8 @@ export const AuthProvider = ({ children }) => {
                     const user = {
                         name: response.data.name,
                         email: response.data.email,
-                        id: response.data._id
+                        id: response.data._id,
+                        admin: true
                     }
 
                     dispatch({

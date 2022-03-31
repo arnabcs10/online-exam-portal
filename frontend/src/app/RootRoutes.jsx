@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom'
 
 import homeRoutes from './views/Home/HomeRoutes'
 import ClassRoutes from './views/Class/ClassRoutes'
+import assessmentRoutes from './views/Assessment/AssessmentRoutes'
 import dashboardRoutes from './views/dashboard/DashboardRoutes'
 import utilitiesRoutes from './views/utilities/UtilitiesRoutes'
 
@@ -30,6 +31,7 @@ const errorRoute = [
 
 const routes = [
     // ...homeRoutes,
+    ...assessmentRoutes,
     ...ClassRoutes,
     ...dashboardRoutes,
     ...materialRoutes,

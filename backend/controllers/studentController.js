@@ -1,4 +1,5 @@
 const asyncHandler = require('express-async-handler');
+const generateToken = require('../utils/generateToken');
 const Student = require('../models/student');
 const Group = require('../models/group');
 
@@ -118,4 +119,27 @@ const addManyStudents = asyncHandler(
     }
 );
 
-module.exports = {addStudent,addManyStudents};
+//@desc Auth student and get token
+//@route POST /api/students/login
+//@access Public
+
+const authStudent = asyncHandler(
+    async (req, res) => {
+        const {email, password} = req.body;
+
+        const student = await Student.findOne({email: email});
+        if(student && ( student.rollNumber === (password))){
+            res.json({
+                _id: student._id,
+                name: student.name,
+                email: student.email,
+                rollNumber: student.rollNumber,
+                token: generateToken(student._id)
+            });
+        }else{
+            res.status(401);
+            throw new Error('Invalid email or password');
+        }
+    }
+);
+module.exports = {addStudent,addManyStudents, authStudent};

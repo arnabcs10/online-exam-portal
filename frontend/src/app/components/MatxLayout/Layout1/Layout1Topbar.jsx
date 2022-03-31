@@ -16,6 +16,7 @@ import clsx from 'clsx'
 import useAuth from 'app/hooks/useAuth'
 import useSettings from 'app/hooks/useSettings'
 import { NotificationProvider } from 'app/contexts/NotificationContext'
+import Brand from '../../Brand/Brand'
 
 const useStyles = makeStyles(({ palette, ...theme }) => ({
     topbar: {
@@ -102,11 +103,11 @@ const Layout1Topbar = () => {
             <div className={clsx({ 'topbar-hold': true, fixed: fixed })}>
                 <div className="flex justify-between items-center h-full">
                     <div className="flex">
-                        <IconButton
+                        {user.admin ? (<IconButton
                             onClick={handleSidebarToggle}
                         >
                             <Icon>menu</Icon>
-                        </IconButton>
+                        </IconButton>) : (<Brand />)}
 
                         {/* <div className="hide-on-mobile">
                             <IconButton>
