@@ -10,6 +10,7 @@ const examinerRoutes = require('./routes/examinerRoutes');
 const groupRoutes = require('./routes/groupRoutes');
 const studentRoutes = require('./routes/studentRoutes');
 const examRoutes = require('./routes/examRoutes');
+const answereSheetRoutes = require('./routes/answereSheetRoutes');
 
 //Middlewares
 const { notFound,errorHandler} = require('./middlewares/errorMiddleware');
@@ -31,6 +32,7 @@ app.use('/api/examiners',examinerRoutes);
 app.use('/api/groups',groupRoutes);
 app.use('/api/students',studentRoutes);
 app.use('/api/exams',examRoutes);
+app.use('/api/answers/',answereSheetRoutes);
 
 
 if(process.env.NODE_ENV === 'production'){

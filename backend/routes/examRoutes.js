@@ -5,7 +5,8 @@ const router = express.Router();
 const {
     createExam,
     getExamById,
-    getAllExamsByGroupId
+    getAllExamsByGroupId,
+    getExamStatus
 } = require('../controllers/examController');
 
 // import middlewares
@@ -15,6 +16,7 @@ const { protect } = require('../middlewares/authMiddleware');
 router.route('/').post(protect, createExam);
 router.route('/:id').get(protect, getExamById);
 router.route('/all/:groupId').get(protect, getAllExamsByGroupId);
+router.route('/status/:id').get(getExamStatus);
 
 
 

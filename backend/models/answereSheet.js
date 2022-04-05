@@ -12,6 +12,9 @@ const answereSheetSchema = mongoose.Schema({
         ref:'exam',
         required:true,
     },
+    timeLeft:{
+        type:Number,
+    },
     marks:{
         type:Number,
         default:0
