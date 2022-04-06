@@ -30,6 +30,13 @@ const setSession = (token) => {
         delete axios.defaults.headers.common.Authorization
     }
 }
+const setUser = (user) => {
+    if (user) {
+        localStorage.setItem('user', JSON.stringify(user))
+    } else {
+        localStorage.removeItem('user')
+    }
+}
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -108,7 +115,7 @@ export const AuthProvider = ({ children }) => {
             admin: isAdmin
         }
         setSession(token)
-
+        setUser(user)
         dispatch({
             type: 'LOGIN',
             payload: {
@@ -132,7 +139,7 @@ export const AuthProvider = ({ children }) => {
             admin: true
         }
         setSession(token)
-
+        setUser(user)
         dispatch({
             type: 'REGISTER',
             payload: {
@@ -143,6 +150,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = () => {
         setSession(null)
+        setUser(null)
         dispatch({ type: 'LOGOUT' })
     }
 
@@ -150,17 +158,22 @@ export const AuthProvider = ({ children }) => {
         ;(async () => {
             try {
                 const token = window.localStorage.getItem('token')
+                const usr = JSON.parse(window.localStorage.getItem('user'))
 
                 if (token && isValidToken(token)) {
                     setSession(token)
-                    const response = await axios.get('/api/examiners/profile')
+                    // const response = await axios.get('/api/examiners/profile')
+                    // const user = {
+                    //     name: response.data.name,
+                    //     email: response.data.email,
+                    //     id: response.data._id,
+                    //     admin: true
+                    // }
                     const user = {
-                        name: response.data.name,
-                        email: response.data.email,
-                        id: response.data._id,
-                        admin: true
+                        ...usr,
+                        // admin: true
                     }
-
+                    setUser(user)
                     dispatch({
                         type: 'INIT',
                         payload: {

@@ -145,7 +145,7 @@ const TestDashboard = () => {
                                     }}
                                 >
                                     <div style={{width:"100%"}}>
-                                    {"http://localhost:3000/assessment/6241826aa3fbbdb9543a4767".slice(0,70) + "..."}
+                                    {`http://localhost:3000/assessment/${examDetails._id}`.slice(0,70) + "..."}
                                     </div>
                                     <Icon >
                                         content_copy

@@ -5,6 +5,7 @@ import { combineReducers } from 'redux'
 // import NavigationReducer from './NavigationReducer'
 import {classReducer} from './ClassReducer';
 import {examReducer} from './ExamReducer';
+import {testReducer} from './TestReducer';
 
 const RootReducer = combineReducers({
     // notifications: NotificationReducer,
@@ -13,6 +14,7 @@ const RootReducer = combineReducers({
     // ecommerce: EcommerceReducer,
     classStore: classReducer,
     examStore: examReducer,
+    testStore: testReducer
 })
 
 export default RootReducer

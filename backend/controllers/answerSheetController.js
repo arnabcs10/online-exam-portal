@@ -14,8 +14,8 @@ const getAnswerSheet = asyncHandler(
             const sheet = await AnswereSheet.find({examId: examId, studentId: studentId}).populate('examId');
             if(sheet.length )
             {
-                console.log(sheet);
-                res.json(sheet);
+                console.log(sheet[0]);
+                res.json(sheet[0]);
             }
             else{
                 const exam = await Exam.findById(examId);
