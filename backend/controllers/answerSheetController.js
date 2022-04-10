@@ -19,17 +19,28 @@ const getAnswerSheet = asyncHandler(
             }
             else{
                 const exam = await Exam.findById(examId);
-                const sheet = new AnswereSheet({                    
+                const newSheet = await AnswereSheet.create({                    
                     examId,
                     studentId,
                     timeLeft: exam.duration,
                     marks: 0,
-                    answers :[]
+                    answers : []
                 });
-                const createdSheet = await sheet.save();
-                console.log(createdSheet);
+                exam.questions.forEach((q,index) => {
+                    const ans = {
+                        qid: q.qid,
+                        questionNumber: index+1,
+                        text: "",
+                        markAssigned: 0
+                    }
+                    newSheet.answers.push(ans);
+                })
+                await newSheet.save();
+                const createdSheet = await AnswereSheet.find({examId: examId, studentId: studentId}).populate('examId');
+                
+                console.log(newSheet);
                 res.status(201);
-                res.json(createdSheet);
+                res.json(createdSheet[0]);
             }
             
             

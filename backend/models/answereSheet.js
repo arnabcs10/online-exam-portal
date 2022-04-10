@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
 
+const answerSchema = mongoose.Schema({
+    qid:{type:String},
+    questionNumber:{type:Number},
+    text:{ type:String },
+    markAssigned: {type:Number, default:0}
+});
 
 const answereSheetSchema = mongoose.Schema({
     studentId:{
@@ -19,12 +25,8 @@ const answereSheetSchema = mongoose.Schema({
         type:Number,
         default:0
     },
-    answeres:[
-        {
-            questionNumber:{type:Number},
-            text:{ type:String },
-            markAssigned: {type:Number, default:0}
-        }
+    answers:[
+        answerSchema
     ],
     
     

@@ -2,13 +2,27 @@ import React, {useState} from 'react';
 import{
     Divider,
     Grid,
-    Button
+    Button,
+    TextField
 } from '@material-ui/core';
 import { SimpleCard } from 'app/components';
 
 const QuestionAnswerForm = (props) => {
-    const [isSaved, setIsSaved] = useState(false);
     const { qid, text, answer, mark, index } = props;
+
+    // Initialize thses 2 states with values already saved in AnswerSheet DB
+    const [isSaved, setIsSaved] = useState(false);
+    const [value,setValue] = useState(""); 
+    const handleChange = (evt) => {
+        setIsSaved(false);
+        setValue(evt.target.value);
+    }
+
+    const saveAndNext = () => {
+
+        setIsSaved((state) => !state);
+    }
+    
   return (
         <SimpleCard elevation={3} className="h-full" title={`Question: ${index+1}`}>
             <Grid container spacing={2}>
@@ -27,10 +41,14 @@ const QuestionAnswerForm = (props) => {
                     <Divider  />
                 </Grid>
                 <Grid item md={12} xs={12}>                
-                    <div className='text-small font-light'> Answer Key </div>
-                    <p>
-                        {answer}
-                    </p>
+                    <div className='text-small font-light'> Answer  </div>
+                        <TextField 
+                            value={value} 
+                            onChange={handleChange} 
+                            margin='normal'
+                            multiline={true}
+                            fullWidth
+                        />
                 
                     
                 </Grid>
@@ -38,7 +56,7 @@ const QuestionAnswerForm = (props) => {
                 <Grid item md={12} xs={12} className="text-right align-middle" style={{marginTop:"-15px"}}>
                     <Divider  />
                     {/* You can put button or icon here to denote plagarism detection enabled */}
-                    <Button color={isSaved ? "primary" : "secondary"} variant="contained" onClick={() => setIsSaved((state) => !state)} className="mt-3 mr-2">
+                    <Button color={isSaved ? "primary" : "secondary"} variant="contained" onClick={saveAndNext} className="mt-3 mr-2">
                     {isSaved ? "Saved" : "Save and Next"}                              
                     </Button>
                 </Grid>
