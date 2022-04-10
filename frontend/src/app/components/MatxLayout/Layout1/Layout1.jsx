@@ -125,7 +125,7 @@ const Layout1 = () => {
                                     <Layout1Topbar />
                                 </ThemeProvider>
                             )}
-                        <div className="relative flex-grow">
+                        <div className={`relative flex-grow ${user.admin ? "" : "bg-light-primary"}`}>
                             <MatxSuspense>{renderRoutes(routes)}</MatxSuspense>
                         </div>
                         {settings.footer.show && !settings.footer.fixed && (
