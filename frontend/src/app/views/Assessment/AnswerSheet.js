@@ -26,13 +26,26 @@ const dispatch = useDispatch();
 const testState = useSelector(state => state.testStore);
 const { loading, message, status, testDetails } = testState;
 
-
-    const options = [...Array(testDetails.examId.numberOfQuestions).keys()].map((val) => val+1)
-
-
+    const [answers, setAnswers] = useState([...testDetails.answers]);
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedIndex, setSelectedIndex] = useState(0);
 
+    const handleSaveAnswer = (id,ans) => {
+        setAnswers((answers) => {
+            const updatedAnswers = answers.map(ansItem => {
+                if(ansItem.qid === id)
+                {
+                    return {...ansItem, text: ans};
+                }
+                return ansItem;
+            })
+            return updatedAnswers;
+        });
+    }
+
+    const handleFinalSubmit =() =>{
+        console.log("final submit:",answers);
+    }
     const handleClickListItem = (event) => {
         setAnchorEl(event.currentTarget)
     }
@@ -91,7 +104,7 @@ const { loading, message, status, testDetails } = testState;
                             <SimpleCard elevation={3} className="h-full" title={"Question Paper"}>
                                 <Grid item md={12} xs={12} className="text-right mb-2" style={{marginTop:"-35px"}}>
                                         <Button variant='outlined' color="primary" onClick={handleClickListItem}>
-                                        Go to Question: {options[selectedIndex]}
+                                        Go to Question: {answers[selectedIndex].questionNumber}
                                         </Button>
                                         <Menu
                                             id="lock-menu"
@@ -106,13 +119,13 @@ const { loading, message, status, testDetails } = testState;
                                                 },
                                             }}
                                         >
-                                            {options.map((option, index) => (
+                                            {answers.map((q, index) => (
                                                 <MenuItem
-                                                    key={option}                                                    
+                                                    key={q._id}                                                    
                                                     selected={index === selectedIndex}
                                                     onClick={(event) => handleMenuItemClick(event, index)}
                                                 >
-                                                   <span >Question: {option}</span> 
+                                                   <span >Question: {q.questionNumber}</span> 
                                                 </MenuItem>
                                             ))}
                                         </Menu>
@@ -121,9 +134,13 @@ const { loading, message, status, testDetails } = testState;
                                 <QuestionAnswerForm 
                                     qid={testDetails.examId.questions[selectedIndex].qid} 
                                     text={testDetails.examId.questions[selectedIndex].text}
-                                    answer={testDetails.examId.questions[selectedIndex].answer}
+                                    answer={answers[selectedIndex].text}
                                     mark={testDetails.examId.questions[selectedIndex].mark}
                                     index={selectedIndex}
+                                    setSelectedIndex={setSelectedIndex}
+                                    numberOfQuestions={testDetails.examId.numberOfQuestions}
+                                    saveAnswer={handleSaveAnswer}
+                                    handleFinalSubmit={handleFinalSubmit}
                                 />
                                </Grid> 
                             </SimpleCard>
