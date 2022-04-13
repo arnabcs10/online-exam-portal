@@ -14,8 +14,8 @@ const initialState = {
     message: null,
     status: 2,
     // TESTList: [],
-    testDetails: localStorage.getItem('testDetails') ? JSON.parse(localStorage.getItem('testDetails')) : null
-    // testDetails:  null
+    // testDetails: localStorage.getItem('testDetails') ? JSON.parse(localStorage.getItem('testDetails')) : null
+    testDetails:  null
 };
 
 export const testReducer = (state = initialState, action) => {

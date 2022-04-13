@@ -36,9 +36,31 @@ export const getTestDetails = (testId,studentId) => async (dispatch) =>{
 
         const { data } = await axios.get(`/api/answers/${testId}/${studentId}`);
         
-        localStorage.setItem('testDetails', JSON.stringify(data));
+        // localStorage.setItem('testDetails', JSON.stringify(data));
 
         dispatch({ type: TEST_DETAILS_SUCCESS, payload: data });
+    }catch(error){
+        dispatch( { 
+            type: TEST_DETAILS_FAIL,
+            message:{
+                variant: 'error',
+                content: error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message
+            } 
+        });
+    }
+}
+
+export const updateAnswerSheet = (id, reqBody) => async (dispatch) =>{
+    try{
+        // dispatch({ type: TEST_DETAILS_REQUEST });
+
+        const { data } = await axios.put(`/api/answers/${id}`, reqBody);
+        
+        
+
+        // dispatch({ type: TEST_DETAILS_SUCCESS, payload: data });
     }catch(error){
         dispatch( { 
             type: TEST_DETAILS_FAIL,

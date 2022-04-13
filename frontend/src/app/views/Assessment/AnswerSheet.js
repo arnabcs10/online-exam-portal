@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import useAuth from 'app/hooks/useAuth'
-import {getTestDetails} from 'app/redux/actions/TestActions';
+import {updateAnswerSheet} from 'app/redux/actions/TestActions';
 import {
     Grid,
     Container,
@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import QuestionAnswerForm from './QuestionAnswerForm';
 import { SimpleCard } from 'app/components';
+import Message from '../Class/CustomSnackbar';
 
 
 const AnswerSheet = () => {
@@ -39,8 +40,19 @@ const { loading, message, status, testDetails } = testState;
                 }
                 return ansItem;
             })
+
+            const data = {
+                answers: updatedAnswers,
+                timeLeft: testDetails.timeLeft
+            }
+            dispatch(updateAnswerSheet(testDetails._id, data));
             return updatedAnswers;
         });
+        // const data = {
+        //     answers,
+        //     timeLeft: testDetails.timeLeft
+        // }
+        // dispatch(updateAnswerSheet(testDetails._id, data));
     }
 
     const handleFinalSubmit =() =>{
@@ -61,6 +73,7 @@ const { loading, message, status, testDetails } = testState;
   return (
     <div className="analytics m-sm-30 ">
                 <Container maxWidth="lg">
+                {message && (<Message variant={message.variant} message={message.content}/>)}
                     <Grid container spacing={2}>
                     {testDetails && (
                         <Grid item md={12} xs={12} sx={{ width: '75%' }}>
