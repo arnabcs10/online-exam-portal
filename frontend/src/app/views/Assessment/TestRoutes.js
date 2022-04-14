@@ -1,5 +1,6 @@
 import StartScreen from './StartScreen';
 import AnswerSheet from './AnswerSheet';
+import SubmittedScreen from './SubmittedScreen';
 
 const testRoutes = [
     {
@@ -8,7 +9,7 @@ const testRoutes = [
     },
     {
         path: '/assessment/:testId/submitted',
-        component: StartScreen,
+        component: SubmittedScreen,
     },
     {
         path: '/assessment/:testId',

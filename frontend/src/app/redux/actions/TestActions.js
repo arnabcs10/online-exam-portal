@@ -54,13 +54,14 @@ export const getTestDetails = (testId,studentId) => async (dispatch) =>{
 
 export const updateAnswerSheet = (id, reqBody) => async (dispatch) =>{
     try{
-        // dispatch({ type: TEST_DETAILS_REQUEST });
+        if(reqBody.timeLeft === 0)
+            dispatch({ type: TEST_DETAILS_REQUEST });
 
         const { data } = await axios.put(`/api/answers/${id}`, reqBody);
         
         
-
-        // dispatch({ type: TEST_DETAILS_SUCCESS, payload: data });
+        if(reqBody.timeLeft === 0)
+            dispatch({ type: TEST_DETAILS_SUCCESS, payload: data });
     }catch(error){
         dispatch( { 
             type: TEST_DETAILS_FAIL,

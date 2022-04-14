@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory, useParams, Redirect } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import useAuth from 'app/hooks/useAuth'
 import {updateAnswerSheet} from 'app/redux/actions/TestActions';
@@ -23,10 +23,19 @@ const AnswerSheet = () => {
     user
 } = useAuth();
 const dispatch = useDispatch();
+const { testId} = useParams();
+// const history = useHistory();
 
 const testState = useSelector(state => state.testStore);
 const { loading, message, status, testDetails } = testState;
 
+    // if(!testDetails)
+    // {
+    //     console.log("got to reload");
+    //     let path = `/assessment/${testId}`;
+    //     // history.push(path);  
+    //     return <Redirect to={path}  />
+    // }
     const [answers, setAnswers] = useState([...testDetails.answers]);
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -57,7 +66,25 @@ const { loading, message, status, testDetails } = testState;
 
     const handleFinalSubmit =() =>{
         console.log("final submit:",answers);
+        const data = {
+            answers: answers,
+            timeLeft: 0
+        }
+        dispatch(updateAnswerSheet(testDetails._id, data));
+        // let path = `/assessment/${testId}/submitted`;
+        // history.push(path);
+
+        console.log("Thank You");
+        let displayMessage = "Thank You";
+        let path = `/assessment/${testId}/submitted`;
+        // history.push(path);  
+        return <Redirect to={{
+            pathname: path,
+            state: { displayMessage}
+        }}  />
+        
     }
+
     const handleClickListItem = (event) => {
         setAnchorEl(event.currentTarget)
     }
@@ -69,6 +96,17 @@ const { loading, message, status, testDetails } = testState;
 
     const handleMenuClose=() =>{
         setAnchorEl(null)
+    }
+    if(testDetails.timeLeft === 0)
+    {
+        console.log("You already attempted the test");
+        let displayMessage = "You already attempted the test";
+        let path = `/assessment/${testId}/submitted`;
+        // history.push(path);  
+        return <Redirect to={{
+            pathname: path,
+            state: { displayMessage}
+        }}  />
     }
   return (
     <div className="analytics m-sm-30 ">
