@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState,useEffect, useRef, forwardRef, useImperativeHandle} from 'react'
 import { Link, useHistory, useParams, Redirect } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import useAuth from 'app/hooks/useAuth'
@@ -16,6 +16,79 @@ import QuestionAnswerForm from './QuestionAnswerForm';
 import { SimpleCard } from 'app/components';
 import Message from '../Class/CustomSnackbar';
 
+const Timer = forwardRef((props, ref) => {
+    const { timeLeft } = props;
+    // const [time, setTime] = useState(timeLeft);
+
+    // useImperativeHandle(ref, () => ({getTime: () => {return time}}), [time]);
+
+    // useEffect(() => {
+    //     let currentTime = timeLeft;
+    //     const clearId = setInterval(() =>{
+    //         console.log(currentTime);
+    //         setTime(currentTime);
+    //         currentTime--;
+    //         if(currentTime < 0)
+    //         {
+    //         clearInterval(clearId);
+    //         }
+    //     },1000);
+    
+    // }, [])
+    const [time, setTime] = useState({
+        minutes : timeLeft,
+        seconds: 0
+    });
+    // const [ minutes, setMinutes ] = useState(timeLeft);
+    // const [seconds, setSeconds ] =  useState(59);
+    useImperativeHandle(ref, () => ({getTime: () => {return time.minutes}}), [time]);
+
+    useEffect(()=>{
+        
+        let myInterval = setInterval(() => {
+            let currMin = time.minutes;
+            let currSec = time.seconds;
+            // console.log(currMin,currSec);
+                if (currSec > 0) {
+                    currSec--;
+                    setTime((t) => ({
+                        minutes: t.minutes,
+                        seconds: currSec
+                    }));
+                }
+                if (currSec === 0) {
+                    if (currMin === 0) {
+                        clearInterval(myInterval)
+                    } else {
+                        currMin--;
+                        setTime((t) => ({
+                            minutes: currMin,
+                            seconds: 59
+                        }));
+                    }
+                } 
+            }, 1000)
+            return ()=> {
+                clearInterval(myInterval);
+            };
+    });
+    
+    return (
+        <>
+        {(time.minutes === 4  ) && (<Message variant="error"  message={`Last 5 minutes left`}/>)}
+        <div className="text-center text-24"
+            style={{
+            position:"fixed",
+            left:"40vw",
+            top:"10px",
+            zIndex:"100"
+            }}
+        >
+        <span className={`font-bold ${((time.minutes <= 4) ? "text-error" : "")}`}> Time Left: {time.minutes}:{time.seconds < 10 ?  `0${time.seconds}` : time.seconds} minutes</span>
+        </div>
+        </>
+    );
+})
 
 const AnswerSheet = () => {
   const {
@@ -25,6 +98,7 @@ const AnswerSheet = () => {
 const dispatch = useDispatch();
 const { testId} = useParams();
 // const history = useHistory();
+const myRef = useRef();
 
 const testState = useSelector(state => state.testStore);
 const { loading, message, status, testDetails } = testState;
@@ -36,10 +110,13 @@ const { loading, message, status, testDetails } = testState;
     //     // history.push(path);  
     //     return <Redirect to={path}  />
     // }
-    const [answers, setAnswers] = useState([...testDetails.answers]);
+    const [answers, setAnswers] = useState([...testDetails. answers]);
+    // const [time, setTime] = useState(0);
+    
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedIndex, setSelectedIndex] = useState(0);
 
+    
     const handleSaveAnswer = (id,ans) => {
         setAnswers((answers) => {
             const updatedAnswers = answers.map(ansItem => {
@@ -49,10 +126,10 @@ const { loading, message, status, testDetails } = testState;
                 }
                 return ansItem;
             })
-
+            let currtime = myRef.current.getTime();
             const data = {
                 answers: updatedAnswers,
-                timeLeft: testDetails.timeLeft
+                timeLeft: currtime
             }
             dispatch(updateAnswerSheet(testDetails._id, data));
             return updatedAnswers;
@@ -97,6 +174,22 @@ const { loading, message, status, testDetails } = testState;
     const handleMenuClose=() =>{
         setAnchorEl(null)
     }
+
+    // useEffect(() => {
+    //     let currentTime = testDetails.timeLeft;
+    //     const clearId = setInterval(() =>{
+    //       console.log(currentTime);
+    //       setTime(currentTime);
+    //       currentTime--;
+    //       if(currentTime < 0)
+    //       {
+    //         clearInterval(clearId);
+    //       }
+    //     },1000);
+    
+      
+    // }, [testDetails]); 
+
     if(testDetails.timeLeft === 0)
     {
         console.log("You already attempted the test");
@@ -108,6 +201,9 @@ const { loading, message, status, testDetails } = testState;
             state: { displayMessage}
         }}  />
     }
+
+    
+    
   return (
     <div className="analytics m-sm-30 ">
                 <Container maxWidth="lg">
@@ -133,7 +229,7 @@ const { loading, message, status, testDetails } = testState;
                                 </Grid> 
 
                                 {/* <Grid item md={12} xs={12} className="text-center text-24"> */}
-                                <div className="text-center text-24"
+                                {/* <div className="text-center text-24"
                                   style={{
                                     position:"fixed",
                                     left:"40vw",
@@ -141,8 +237,9 @@ const { loading, message, status, testDetails } = testState;
                                     zIndex:"100"
                                   }}
                                 >
-                                <span className="font-bold">Time Left: </span> {testDetails.timeLeft} minutes
-                                </div>
+                                <span className="font-bold">Time Left: </span> {time} minutes
+                                </div> */}
+                                <Timer timeLeft={testDetails.timeLeft}  ref={myRef}/>
                                 {/* </Grid> */}
 
                                                           
