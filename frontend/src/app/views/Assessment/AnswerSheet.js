@@ -39,13 +39,14 @@ const Timer = forwardRef((props, ref) => {
         minutes : timeLeft,
         seconds: 0
     });
-    // const [ minutes, setMinutes ] = useState(timeLeft);
+    // const [ isOnline, setIsOnline ] = useState(navigator.onLine);
     // const [seconds, setSeconds ] =  useState(59);
     useImperativeHandle(ref, () => ({getTime: () => {return time.minutes}}), [time]);
 
     useEffect(()=>{
         
         let myInterval = setInterval(() => {
+            
             let currMin = time.minutes;
             let currSec = time.seconds;
             // console.log(currMin,currSec);
@@ -67,7 +68,14 @@ const Timer = forwardRef((props, ref) => {
                         }));
                     }
                 } 
+                
             }, 1000)
+
+            if(navigator.onLine === false)
+            {
+                console.log(navigator.onLine);
+                clearInterval(myInterval);
+            }
             return ()=> {
                 clearInterval(myInterval);
             };
@@ -75,6 +83,7 @@ const Timer = forwardRef((props, ref) => {
     
     return (
         <>
+        {( navigator.onLine === false ) && (<Message variant="warning"  message={"You are offline! \nYou will be logged out of the system after sometime."}/>)}
         {(time.minutes === 4  ) && (<Message variant="error"  message={`Last 5 minutes left`}/>)}
         <div className="text-center text-24"
             style={{
@@ -153,11 +162,12 @@ const { loading, message, status, testDetails } = testState;
 
         console.log("Thank You");
         let displayMessage = "Thank You";
+        let displaySubMessage = "Your responses are submitted";
         let path = `/assessment/${testId}/submitted`;
         // history.push(path);  
         return <Redirect to={{
             pathname: path,
-            state: { displayMessage}
+            state: { displayMessage, displaySubMessage}
         }}  />
         
     }
@@ -175,30 +185,49 @@ const { loading, message, status, testDetails } = testState;
         setAnchorEl(null)
     }
 
-    // useEffect(() => {
-    //     let currentTime = testDetails.timeLeft;
-    //     const clearId = setInterval(() =>{
-    //       console.log(currentTime);
-    //       setTime(currentTime);
-    //       currentTime--;
-    //       if(currentTime < 0)
-    //       {
-    //         clearInterval(clearId);
-    //       }
-    //     },1000);
+    const updateFunc = () =>{
+          
+        let currtime = myRef.current.getTime();
+        let ans = answers;
+        let data = {
+            answers: ans,
+            timeLeft: currtime
+        }
+        dispatch(updateAnswerSheet(testDetails._id, data));
+        console.log("update...",currtime,ans);
+        
+        
+    }
+    useEffect(() => {
+        let clearId = setInterval(updateFunc,30000);
     
-      
-    // }, [testDetails]); 
+        return ()=> {
+            clearInterval(clearId);
+        };
+    }, []); 
 
+    if(message && message.variant === "error")
+    {
+        console.log("Something went wrong");
+        let displayMessage = "Something went wrong";
+        let displaySubMessage = "Your responses are saved. \nLogin again to resume the test";
+        let path = `/assessment/${testId}/submitted`;
+        return <Redirect to={{
+            pathname: path,
+            state: { error: true, displayMessage, displaySubMessage}
+        }}  />
+        
+    }
     if(testDetails.timeLeft === 0)
     {
         console.log("You already attempted the test");
         let displayMessage = "You already attempted the test";
+        let displaySubMessage = "Your responses are saved";
         let path = `/assessment/${testId}/submitted`;
         // history.push(path);  
         return <Redirect to={{
             pathname: path,
-            state: { displayMessage}
+            state: { displayMessage, displaySubMessage}
         }}  />
     }
 

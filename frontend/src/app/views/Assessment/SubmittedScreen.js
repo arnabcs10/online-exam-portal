@@ -15,6 +15,8 @@ const SubmittedScreen = (props) =>{
     const { loading, message, status } = testState;
 
     const displayMessage = location.state ? location.state.displayMessage : "Thank You";
+    const displaySubMessage = location.state ? location.state.displaySubMessage : "Thank You";
+    const err = location.state && location.state.error;
 
     return (loading ? (<MatxLoading/>):(
         <div className="analytics m-sm-30">
@@ -26,19 +28,26 @@ const SubmittedScreen = (props) =>{
                                 
                                 <Grid container spacing={2} className="text-center">
                                     <Grid item md={12} xs={12} >                                 
-                                        <Fab
+                                        {err ? 
+                                        (<Fab
+                                            size="medium"
+                                            className="bg-light-error circle-44 box-shadow-none"
+                                        >
+                                            <Icon className="text-muted">error_outline</Icon>
+                                        </Fab>) :
+                                        (<Fab
                                             size="medium"
                                             className="bg-light-green circle-44 box-shadow-none"
                                         >
                                             <Icon className="text-muted">sentiment_satisfied</Icon>
-                                        </Fab>    
+                                        </Fab>)}    
                                     </Grid>
                                     <Grid item md={12} xs={12} >                                 
                                         <div className="font-light text-24">
                                             {displayMessage}
                                         </div>
                                         <div className="font-light text-13">
-                                            Your responses are submitted
+                                            {displaySubMessage}
                                         </div>
                                     </Grid>
                                 </Grid>
