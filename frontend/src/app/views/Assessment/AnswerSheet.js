@@ -16,6 +16,7 @@ import QuestionAnswerForm from './QuestionAnswerForm';
 import { SimpleCard } from 'app/components';
 import Message from '../Class/CustomSnackbar';
 
+let ans;
 const Timer = forwardRef((props, ref) => {
     const { timeLeft } = props;
     // const [time, setTime] = useState(timeLeft);
@@ -185,21 +186,34 @@ const { loading, message, status, testDetails } = testState;
         setAnchorEl(null)
     }
 
-    const updateFunc = () =>{
+    // const updateFunc = () =>{
           
-        let currtime = myRef.current.getTime();
-        let ans = answers;
-        let data = {
-            answers: ans,
-            timeLeft: currtime
-        }
-        dispatch(updateAnswerSheet(testDetails._id, data));
-        console.log("update...",currtime,ans);
+    //     let currtime = myRef.current.getTime();
+    //     let ans = answers;
+    //     let data = {
+    //         answers: ans,
+    //         timeLeft: currtime
+    //     }
+    //     dispatch(updateAnswerSheet(testDetails._id, data));
+    //     console.log("update...",currtime,ans);
         
         
-    }
+    // }
+    ans = answers;
     useEffect(() => {
-        let clearId = setInterval(updateFunc,30000);
+        let clearId = setInterval(() =>{
+          
+            let currtime = myRef.current.getTime();
+            
+            let data = {
+                answers: ans,
+                timeLeft: currtime
+            }
+            dispatch(updateAnswerSheet(testDetails._id, data));
+            console.log("update...",currtime,ans);
+            
+            
+        },30000);
     
         return ()=> {
             clearInterval(clearId);
