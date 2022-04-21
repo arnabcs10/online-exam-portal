@@ -16,6 +16,7 @@ import QuestionAnswerForm from './QuestionAnswerForm';
 import { SimpleCard } from 'app/components';
 import Message from '../Class/CustomSnackbar';
 import MatxLoading from 'app/components/MatxLoading/MatxLoading';
+import AlertDialog from '../Class/AlertDialog';
 
 let ans;
 const Timer = forwardRef((props, ref) => {
@@ -127,7 +128,11 @@ const { loading, message, status, attempted, testDetails } = testState;
     
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedIndex, setSelectedIndex] = useState(0);
-
+    const [alertDialog, setAlertDialog] = useState({
+        isOpen : false,
+        title: "",
+        content: ""
+    });
     
     const handleSaveAnswer = (id,ans) => {
         setAnswers((answers) => {
@@ -176,7 +181,16 @@ const { loading, message, status, attempted, testDetails } = testState;
         }}  />
         
     }
-
+    const handleSubmit = () => {
+        
+        setAlertDialog({
+            isOpen: true,
+            title: "Are you sure?",
+            content: "You will not be able make any changes after submission. Please click confirm to proceed.",
+            onConfirm: handleFinalSubmit
+        });
+        
+    }
     const handleClickListItem = (event) => {
         setAnchorEl(event.currentTarget)
     }
@@ -207,7 +221,7 @@ const { loading, message, status, attempted, testDetails } = testState;
     useEffect(() => {
         let clearId = setInterval(() =>{
           
-            let currtime = myRef.current.getTime();
+            let currtime = myRef.current ? myRef.current.getTime() : 0 ;
             
             let data = {
                 answers: ans,
@@ -254,6 +268,10 @@ const { loading, message, status, attempted, testDetails } = testState;
     
   return (loading ? (<MatxLoading/>):(
     <div className="analytics m-sm-30 ">
+                <AlertDialog 
+                    alertDialog={alertDialog}
+                    setAlertDialog={setAlertDialog}                
+                />
                 <Container maxWidth="lg">
                 {message && (<Message variant={message.variant} message={message.content}/>)}
                     <Grid container spacing={2}>
@@ -336,7 +354,7 @@ const { loading, message, status, attempted, testDetails } = testState;
                                     setSelectedIndex={setSelectedIndex}
                                     numberOfQuestions={testDetails.examId.numberOfQuestions}
                                     saveAnswer={handleSaveAnswer}
-                                    handleFinalSubmit={handleFinalSubmit}
+                                    handleFinalSubmit={handleSubmit}
                                 />
                                </Grid> 
                             </SimpleCard>
