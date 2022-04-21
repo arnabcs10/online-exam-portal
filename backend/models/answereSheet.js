@@ -21,6 +21,10 @@ const answereSheetSchema = mongoose.Schema({
     timeLeft:{
         type:Number,
     },
+    attempted:{
+        type:Boolean,
+        default: false
+    },
     marks:{
         type:Number,
         default:0

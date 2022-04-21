@@ -23,6 +23,7 @@ const getAnswerSheet = asyncHandler(
                     examId,
                     studentId,
                     timeLeft: exam.duration,
+                    attempted: false,
                     marks: 0,
                     answers : []
                 });
@@ -61,13 +62,14 @@ const updateAnswerSheet = asyncHandler(
     async (req, res) => {
         try {
             const {answerSheetId} = req.params;
-            const { answers, timeLeft} = req.body;
+            const { answers, timeLeft, attempted} = req.body;
 
             const sheet = await AnswereSheet.findById(answerSheetId);
             if(sheet )
             {
                 sheet.answers = answers;
                 sheet.timeLeft = timeLeft;   
+                sheet.attempted = attempted;
                 
                 const updatedSheet = await sheet.save();
                 

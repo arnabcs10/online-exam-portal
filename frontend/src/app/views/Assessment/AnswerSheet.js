@@ -15,10 +15,11 @@ import {
 import QuestionAnswerForm from './QuestionAnswerForm';
 import { SimpleCard } from 'app/components';
 import Message from '../Class/CustomSnackbar';
+import MatxLoading from 'app/components/MatxLoading/MatxLoading';
 
 let ans;
 const Timer = forwardRef((props, ref) => {
-    const { timeLeft } = props;
+    const { timeLeft, handleFinalSubmit } = props;
     // const [time, setTime] = useState(timeLeft);
 
     // useImperativeHandle(ref, () => ({getTime: () => {return time}}), [time]);
@@ -60,7 +61,8 @@ const Timer = forwardRef((props, ref) => {
                 }
                 if (currSec === 0) {
                     if (currMin === 0) {
-                        clearInterval(myInterval)
+                        clearInterval(myInterval);
+                        handleFinalSubmit();
                     } else {
                         currMin--;
                         setTime((t) => ({
@@ -111,7 +113,7 @@ const { testId} = useParams();
 const myRef = useRef();
 
 const testState = useSelector(state => state.testStore);
-const { loading, message, status, testDetails } = testState;
+const { loading, message, status, attempted, testDetails } = testState;
 
     // if(!testDetails)
     // {
@@ -139,7 +141,8 @@ const { loading, message, status, testDetails } = testState;
             let currtime = myRef.current.getTime();
             const data = {
                 answers: updatedAnswers,
-                timeLeft: currtime
+                timeLeft: currtime,
+                attempted: false
             }
             dispatch(updateAnswerSheet(testDetails._id, data));
             return updatedAnswers;
@@ -155,7 +158,8 @@ const { loading, message, status, testDetails } = testState;
         console.log("final submit:",answers);
         const data = {
             answers: answers,
-            timeLeft: 0
+            timeLeft: 0,
+            attempted: true
         }
         dispatch(updateAnswerSheet(testDetails._id, data));
         // let path = `/assessment/${testId}/submitted`;
@@ -207,7 +211,8 @@ const { loading, message, status, testDetails } = testState;
             
             let data = {
                 answers: ans,
-                timeLeft: currtime
+                timeLeft: currtime,
+                attempted: false
             }
             dispatch(updateAnswerSheet(testDetails._id, data));
             console.log("update...",currtime,ans);
@@ -232,11 +237,11 @@ const { loading, message, status, testDetails } = testState;
         }}  />
         
     }
-    if(testDetails.timeLeft === 0)
+    if(attempted === true)
     {
         console.log("You already attempted the test");
-        let displayMessage = "You already attempted the test";
-        let displaySubMessage = "Your responses are saved";
+        let displayMessage = "Thank You";
+        let displaySubMessage = "Your responses are submitted";
         let path = `/assessment/${testId}/submitted`;
         // history.push(path);  
         return <Redirect to={{
@@ -247,7 +252,7 @@ const { loading, message, status, testDetails } = testState;
 
     
     
-  return (
+  return (loading ? (<MatxLoading/>):(
     <div className="analytics m-sm-30 ">
                 <Container maxWidth="lg">
                 {message && (<Message variant={message.variant} message={message.content}/>)}
@@ -282,7 +287,7 @@ const { loading, message, status, testDetails } = testState;
                                 >
                                 <span className="font-bold">Time Left: </span> {time} minutes
                                 </div> */}
-                                <Timer timeLeft={testDetails.timeLeft}  ref={myRef}/>
+                                <Timer timeLeft={testDetails.timeLeft} handleFinalSubmit={handleFinalSubmit} ref={myRef}/>
                                 {/* </Grid> */}
 
                                                           
@@ -339,7 +344,7 @@ const { loading, message, status, testDetails } = testState;
                     </Grid>            
                 </Container>            
             </div>
-  )
+  ))
 }
 
 export default AnswerSheet

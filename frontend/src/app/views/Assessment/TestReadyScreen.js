@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, Redirect } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import useAuth from 'app/hooks/useAuth'
 import {getTestDetails} from 'app/redux/actions/TestActions';
@@ -71,6 +71,19 @@ const TestReadyScreen = () =>{
         dispatch(getTestDetails(testId,user.id));
         // setTestDetails(info);
 
+    }
+
+    if(testDetails && testDetails.attempted === true)
+    {
+        console.log("You already attempted the test");
+        let displayMessage = "You already attempted the test";
+        let displaySubMessage = "Your responses are saved";
+        let path = `/assessment/${testId}/submitted`;
+        // history.push(path);  
+        return <Redirect to={{
+            pathname: path,
+            state: { displayMessage, displaySubMessage}
+        }}  />
     }
 
     return (

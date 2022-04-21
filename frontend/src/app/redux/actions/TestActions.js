@@ -8,6 +8,10 @@ export const TEST_DETAILS_REQUEST = 'TEST_DETAILS_REQUEST';
 export const TEST_DETAILS_SUCCESS = 'TEST_DETAILS_SUCCESS';
 export const TEST_DETAILS_FAIL = 'TEST_DETAILS_FAIL';
 
+export const TEST_SUBMIT_REQUEST = 'TEST_SUBMIT_REQUEST';
+export const TEST_SUBMIT_SUCCESS = 'TEST_SUBMIT_SUCCESS';
+export const TEST_SUBMIT_FAIL = 'TEST_SUBMIT_FAIL';
+
 export const getTestStatus = (testId) => async (dispatch) =>{
     try{
         
@@ -54,17 +58,17 @@ export const getTestDetails = (testId,studentId) => async (dispatch) =>{
 
 export const updateAnswerSheet = (id, reqBody) => async (dispatch) =>{
     try{
-        if(reqBody.timeLeft === 0)
-            dispatch({ type: TEST_DETAILS_REQUEST });
+        if(reqBody.attempted === true)
+            dispatch({ type: TEST_SUBMIT_REQUEST });
 
         const { data } = await axios.put(`/api/answers/${id}`, reqBody);
         
         
-        if(reqBody.timeLeft === 0)
-            dispatch({ type: TEST_DETAILS_SUCCESS, payload: data });
+        if(reqBody.attempted === true)
+            dispatch({ type: TEST_SUBMIT_SUCCESS });
     }catch(error){
         dispatch( { 
-            type: TEST_DETAILS_FAIL,
+            type: TEST_SUBMIT_FAIL,
             message:{
                 variant: 'error',
                 content: error.response && error.response.data.message
