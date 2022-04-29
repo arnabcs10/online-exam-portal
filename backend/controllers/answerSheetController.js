@@ -1,7 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const Exam = require('../models/exam');
 const AnswereSheet = require('../models/answereSheet');
-
+const evaluator = require('../evaluator/index');
 
 // @desc Create new AnswereSheet
 // @route GET /api/answers/:examId/:studentId
@@ -32,7 +32,9 @@ const getAnswerSheet = asyncHandler(
                         qid: q.qid,
                         questionNumber: index+1,
                         text: "",
-                        markAssigned: 0
+                        markAssigned: 0,
+                        plagiarismCheck: true, // q.plagiarismCheck
+                        plagiarismValue: 0
                     }
                     newSheet.answers.push(ans);
                 })
@@ -90,4 +92,51 @@ const updateAnswerSheet = asyncHandler(
         }
     }
 );
-module.exports = { getAnswerSheet, updateAnswerSheet };
+
+// @desc API to detect plagiarism and auto-answer checking
+// @route PUT /api/answers/evaluation/:examId
+// @access Private
+const answerSheetEvaluation = asyncHandler(
+    async (req, res) => {
+        try {
+            const {examId} = req.params;
+            
+            const sheets = await AnswereSheet.find({examId: examId});
+            const exam = await Exam.findById(examId);
+            if(sheets.length > 0 )
+            {
+                const { plagiarismMatrix, markMatrix} = await evaluator(sheets,exam);
+
+                // updating individual students answer sheet with marks and plagiarism Value
+                for(let sheetIndex=0; sheetIndex<sheets.length; sheetIndex++)
+                {
+                    let totalMarks = 0;
+                    for(let qIndex=0; qIndex<exam.numberOfQuestions; qIndex++)
+                    {
+                        sheets[sheetIndex].answers[qIndex].plagiarismValue = plagiarismMatrix[qIndex][sheetIndex];
+                        sheets[sheetIndex].answers[qIndex].markAssigned = markMatrix[qIndex][sheetIndex];
+                        totalMarks += markMatrix[qIndex][sheetIndex];
+                    }
+                    sheets[sheetIndex].marks = totalMarks;
+                    await sheets[sheetIndex].save();
+                }
+
+                res.status(200);
+                res.json(sheets); // updated sheet
+            }
+            else{
+                res.status(404);
+                throw new Error("Something went wrong. Try again.");
+            }
+            
+            
+        } catch (error) {
+            console.log(error.message);
+            res.status(500);
+            throw new Error(error.message);
+        }
+    }
+);
+
+
+module.exports = { getAnswerSheet, updateAnswerSheet, answerSheetEvaluation };

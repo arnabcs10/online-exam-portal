@@ -4,7 +4,9 @@ const answerSchema = mongoose.Schema({
     qid:{type:String},
     questionNumber:{type:Number},
     text:{ type:String },
-    markAssigned: {type:Number, default:0}
+    markAssigned: {type:Number, default:0},
+    plagiarismCheck: {type:Boolean},
+    plagiarismValue: {type: Number, default:0}
 });
 
 const answereSheetSchema = mongoose.Schema({
