@@ -22,8 +22,9 @@ import {
 import MatxLoading from 'app/components/MatxLoading/MatxLoading';
 import Message from './CustomSnackbar';
 import TestPaperPanel from './TestPaperPanel';
+import AlertDialog from './AlertDialog';
 import { SimpleCard } from 'app/components'
-import {getExamDetails} from 'app/redux/actions/ExamActions';
+import {getExamDetails, getExamResults, computeExamResults} from 'app/redux/actions/ExamActions';
 
 const TestDashboard = () => {
     const dispatch = useDispatch();
@@ -60,19 +61,38 @@ const TestDashboard = () => {
         totalQuestions:0
     });
 
+    const [alertDialog, setAlertDialog] = useState({
+        isOpen : false,
+        title: "",
+        content: ""
+    });
+
     const classState = useSelector(state => state.classStore);
     const {  classDetails } = classState;
 
     
     const examState = useSelector(state => state.examStore);
-    const { loading, message, examDetails } = examState;
+    const { loading, message, examDetails, results } = examState;
     
     useEffect(() => {
-        if(!examDetails || examDetails._id != testId)
+        if(!examDetails || examDetails._id != testId){
             dispatch(getExamDetails(testId));
+            
+        }
+        dispatch(getExamResults(testId));
     }, [dispatch,testId]);
     
-    
+    const evaluateAnswerSheets = () => {
+        dispatch(computeExamResults(testId));
+    }
+    const handleAnswerEvaluation = () =>{
+        setAlertDialog({
+            isOpen: true,
+            title: "Auto-checking might take time!",
+            content: "Cancel if already checked to avoid recomputation. Please click confirm to re-evaluate.",
+            onConfirm: evaluateAnswerSheets
+        });
+    }
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log("submitted");
@@ -100,6 +120,10 @@ const TestDashboard = () => {
     
     return (loading ? (<MatxLoading/>):(
         <div className="analytics m-sm-30">
+            <AlertDialog 
+                alertDialog={alertDialog}
+                setAlertDialog={setAlertDialog}                
+            />
             {message && (<Message variant={message.variant} message={message.content}/>)}
             <Container maxWidth="md">
             <Grid container spacing={2}>
@@ -154,7 +178,7 @@ const TestDashboard = () => {
                         </Grid>
 
                         <Grid item md={4} className="text-right">
-                            <Button color="primary" variant="outlined" >
+                            <Button color="primary" variant="outlined" onClick={handleAnswerEvaluation}>
                                 Fetch Results
                                 <Icon className="ml-2">
                                     autorenew
@@ -191,7 +215,9 @@ const TestDashboard = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {classDetails.studentsEnrolled.map((student) => (
+                            {classDetails.studentsEnrolled.map((student) => {
+                                let studentResult = results.find(res => res.studentId === student._id);
+                                return (
                                 <TableRow key={student._id}>
                                     <TableCell className="px-0" align="left">
                                         {student.rollNumber}
@@ -200,7 +226,7 @@ const TestDashboard = () => {
                                         {student.name}
                                     </TableCell>
                                     <TableCell className="px-0" align="left">
-                                        10
+                                        {(studentResult && studentResult.attempted) ? studentResult.marks : "not attempted"}
                                     </TableCell>
                                     {/* <TableCell className="px-0" align="left">
                                         {student.email}
@@ -214,7 +240,7 @@ const TestDashboard = () => {
                                         </Button>
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            )})}
                         </TableBody>
                     </Table>
                 </div>                      

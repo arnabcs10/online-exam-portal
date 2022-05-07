@@ -11,13 +11,18 @@ import {
     EXAM_DETAILS_SUCCESS, 
     EXAM_DETAILS_FAIL,
 
+    EXAM_RESULTS_REQUEST,
+    EXAM_RESULTS_SUCCESS,
+    EXAM_RESULTS_FAIL,
+
 } from '../actions/ExamActions';
 
 const initialState = {
     loading: false,
     message: null,
     examList: [],
-    examDetails: localStorage.getItem('examDetails') ? JSON.parse(localStorage.getItem('examDetails')) : {}
+    examDetails: localStorage.getItem('examDetails') ? JSON.parse(localStorage.getItem('examDetails')) : {},
+    results:[]
 };
 
 export const examReducer = (state = initialState, action) => {
@@ -39,6 +44,13 @@ export const examReducer = (state = initialState, action) => {
         case EXAM_DETAILS_SUCCESS:
             return { ...state, loading: false, examDetails: action.payload, message:action.message  };
         case EXAM_DETAILS_FAIL:
+            return { ...state, loading: false, message: action.message };
+
+        case EXAM_RESULTS_REQUEST:
+            return { ...state, loading: action.payload, message:null };
+        case EXAM_RESULTS_SUCCESS:
+            return { ...state, loading: false, results: action.payload, message:action.message  };
+        case EXAM_RESULTS_FAIL:
             return { ...state, loading: false, message: action.message };
         default:
             return state;

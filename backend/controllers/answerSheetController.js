@@ -137,6 +137,25 @@ const answerSheetEvaluation = asyncHandler(
         }
     }
 );
+// @desc API to fetch all answersheets and displaying the marks
+// @route GET /api/answers/results/:examId
+// @access Private
+const fetchResultsByExamId = asyncHandler(
+    async (req, res) => {
+        try {
+            const {examId} = req.params;
+            
+            const sheets = await AnswereSheet.find({examId: examId});
+            res.status(200);
+            res.json(sheets);             
+            
+        } catch (error) {
+            console.log(error.message);
+            res.status(500);
+            throw new Error("Something went wrong. Try again.");
+        }
+    }
+);
 
 
-module.exports = { getAnswerSheet, updateAnswerSheet, answerSheetEvaluation };
+module.exports = { getAnswerSheet, updateAnswerSheet, answerSheetEvaluation, fetchResultsByExamId };

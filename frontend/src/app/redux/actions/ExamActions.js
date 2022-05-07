@@ -12,6 +12,10 @@ export const EXAM_DETAILS_REQUEST = 'EXAM_DETAILS_REQUEST';
 export const EXAM_DETAILS_SUCCESS = 'EXAM_DETAILS_SUCCESS';
 export const EXAM_DETAILS_FAIL = 'EXAM_DETAILS_FAIL';
 
+export const EXAM_RESULTS_REQUEST = 'EXAM_RESULTS_REQUEST';
+export const EXAM_RESULTS_SUCCESS = 'EXAM_RESULTS_SUCCESS';
+export const EXAM_RESULTS_FAIL = 'EXAM_RESULTS_FAIL';
+
 export const listExams = (groupId) => async (dispatch) =>{
     try{
         
@@ -81,6 +85,48 @@ export const getExamDetails = (id) => async (dispatch) =>{
     }catch(error){
         dispatch( { 
             type: EXAM_DETAILS_FAIL,
+            message:{
+                variant: 'error',
+                content: error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message
+            } 
+        });
+    }
+}
+export const getExamResults = (id) => async (dispatch) =>{
+    try{
+        dispatch({ type: EXAM_RESULTS_REQUEST, payload: true });
+
+        const { data } = await axios.get(`/api/answers/results/${id}`);
+        
+        // localStorage.setItem('examDetails', JSON.stringify(data));
+
+        dispatch({ type: EXAM_RESULTS_SUCCESS, payload: data });
+    }catch(error){
+        dispatch( { 
+            type: EXAM_RESULTS_FAIL,
+            message:{
+                variant: 'error',
+                content: error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message
+            } 
+        });
+    }
+}
+export const computeExamResults = (id) => async (dispatch) =>{
+    try{
+        dispatch({ type: EXAM_RESULTS_REQUEST, payload: true });
+
+        const { data } = await axios.put(`/api/answers/evaluation/${id}`);
+        
+        // localStorage.setItem('examDetails', JSON.stringify(data));
+
+        dispatch({ type: EXAM_RESULTS_SUCCESS, payload: data });
+    }catch(error){
+        dispatch( { 
+            type: EXAM_RESULTS_FAIL,
             message:{
                 variant: 'error',
                 content: error.response && error.response.data.message
