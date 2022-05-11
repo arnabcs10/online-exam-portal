@@ -207,18 +207,26 @@ const TestDashboard = () => {
                     <Table className="whitespace-pre">
                         <TableHead>
                             <TableRow>
+                                <TableCell className="px-0">Checked</TableCell>    
                                 <TableCell className="px-0">Roll Number</TableCell>
                                 <TableCell className="px-0">Name</TableCell>
                                 <TableCell className="px-0">Marks</TableCell>
-                                {/* <TableCell className="px-0">Email</TableCell>     */}
                                 <TableCell className="px-0">Action</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {classDetails.studentsEnrolled.map((student) => {
                                 let studentResult = results.find(res => res.studentId === student._id);
+                                let studentAttempted = (studentResult && studentResult.attempted);
                                 return (
                                 <TableRow key={student._id}>
+                                    <TableCell className="px-0" align="left">
+                                        <Checkbox
+                                            // checked={false}
+                                            // onChange={}                                            
+                                            color="primary"                                            
+                                        />
+                                    </TableCell>
                                     <TableCell className="px-0" align="left">
                                         {student.rollNumber}
                                     </TableCell>
@@ -226,18 +234,20 @@ const TestDashboard = () => {
                                         {student.name}
                                     </TableCell>
                                     <TableCell className="px-0" align="left">
-                                        {(studentResult && studentResult.attempted) ? studentResult.marks : "not attempted"}
+                                        {studentAttempted ? studentResult.marks : "not attempted"}
                                     </TableCell>
                                     {/* <TableCell className="px-0" align="left">
                                         {student.email}
                                     </TableCell>                                     */}
-                                    <TableCell className="px-0">
-                                        <Button color="primary" variant="text" >
+                                    <TableCell className="px-0">                                                                            
+                                        <Link to={!(studentAttempted) ? "#" : `/class/${classId}/test/${testId}/student/${student._id}`} >
+                                        <Button color={studentAttempted ? "primary" : "default"} variant="text" style={{cursor: !(studentAttempted) && "not-allowed"}}>
                                             Review
                                             <Icon className="ml-2">
                                                 chevron_right
                                             </Icon>                                
                                         </Button>
+                                        </Link>                                       
                                     </TableCell>
                                 </TableRow>
                             )})}

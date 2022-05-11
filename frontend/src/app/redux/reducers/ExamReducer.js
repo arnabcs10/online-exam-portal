@@ -21,7 +21,7 @@ const initialState = {
     loading: false,
     message: null,
     examList: [],
-    examDetails: localStorage.getItem('examDetails') ? JSON.parse(localStorage.getItem('examDetails')) : {},
+    examDetails: localStorage.getItem('examDetails') ? JSON.parse(localStorage.getItem('examDetails')) : null,
     results:[]
 };
 
