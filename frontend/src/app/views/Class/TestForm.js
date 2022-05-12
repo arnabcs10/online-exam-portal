@@ -76,7 +76,9 @@ const TestForm = () => {
                 qid:uuid(),
                 text:'',
                 answer:'',
-                mark: 0
+                mark: 0,
+                qtype:'sa',
+                options:[]
             })
             return {...state, numberOfQuestions: questions.length, questions};
         });

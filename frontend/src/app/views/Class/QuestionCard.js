@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { v4 as uuid } from 'uuid';
 import {
     Icon,
     Button,
@@ -7,18 +8,76 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    Divider
+    Divider,
+    Checkbox
 } from '@material-ui/core'
 const QuestionCard = (props) => {
     const { qid, deleteQuestion, updateAndSaveQuestion } = props;
     const [isSaved, setIsSaved] = useState(props.text.length > 0 ? true : false);
+    const [optionsArray, setOptionsArray] = useState([{
+        id: uuid(),
+        optionText: "",
+        isSelected: false
+    }
+]);
     const [type, setType] = useState('sa');
     const [state, setState] = useState({
         text:props.text || '',
         answer:props.answer || '',
         mark: props.mark || '',
+        qtype:'sa',
+        options:[]
     });
+    
+    const handleSelectOption = (opId) => {
+        setIsSaved(false);
+        setOptionsArray(options => {
+            const newOptions = options.map(op => {
+                if(op.id === opId){
+                    return {...op, isSelected: !op.isSelected}
+                }
+                return op;
+            });
 
+            return newOptions;
+        })
+    }
+    const handleOptionTextChange = (opId, text) => {
+        // console.log(event.target.value);
+        setIsSaved(false);
+        setOptionsArray(options => {
+            const newOptions = options.map(op => {
+                if(op.id === opId){
+                    return {...op, optionText: text}
+                }
+                return op;
+            });
+
+            return newOptions;
+        })
+    }
+    const addOption = () => {
+        setIsSaved(false);
+        setOptionsArray(options => {
+            
+            return [
+                ...options,
+                {
+                    id: uuid(),
+                    optionText: "",
+                    isSelected: false
+                }
+            ];
+        });
+    }
+    const deleteOption = (opId) =>{
+        setIsSaved(false);
+        setOptionsArray(options => {
+            const newOptions = options.filter((op) => op.id !== opId);
+
+            return newOptions;
+        })
+    }
     const handleChange = (event) => {
         event.persist()
         let val = event.target.value;
@@ -39,12 +98,33 @@ const QuestionCard = (props) => {
         event.preventDefault();
         console.log("saved");
         setIsSaved(true);
+        const finalOptions = [];
+        let mcqAns = state.answer;
+        if(type === 'mcq')
+        {
+            mcqAns = "";
+            optionsArray.forEach((op, index) => {
+                finalOptions.push(op.optionText);
+                if(op.isSelected){
+                    mcqAns += index;
+                }
+            });
+        }
         updateAndSaveQuestion({
-            ...state,
+            text:state.text ,
+            answer: mcqAns ,
+            mark: state.mark ,
+            qtype: type,
+            options: finalOptions,
             qid
+            
         });
         console.log({
-            ...state,
+            text:state.text ,
+            answer: mcqAns ,
+            mark: state.mark ,
+            qtype: type,
+            options: finalOptions,
             qid
         });  
         
@@ -56,6 +136,7 @@ const QuestionCard = (props) => {
         });
     }
     const handleTypeChange = (event) => {
+        setIsSaved(false);
         setType(event.target.value);
       };
     return (
@@ -89,7 +170,37 @@ const QuestionCard = (props) => {
                 </Select>
             </Grid>
             <Grid item md={9} xs={12}>                
-                <TextField
+                {type === 'mcq' ? (
+                <>
+                {optionsArray.map((op,index) =>(
+                    <div key={op.id} className="flex">
+                        <Checkbox
+                        checked={op.isSelected}
+                        onChange={() => handleSelectOption(op.id)}                                            
+                        color="primary"                                            
+                        />
+                        <TextField
+                            id={op.id}
+                            className="mb-4 w-full"
+                            variant="standard"
+                            label={`option-${index+1}`}
+                            onChange={(event) => handleOptionTextChange(op.id,event.target.value)}                  
+                            multiline
+                            name={`option-${index+1}`}
+                            value={op.optionText || ''}
+                        />
+                        <Icon className="mt-6 ml-2 cursor-pointer" color="error" variant="contained" onClick={() => deleteOption(op.id)}>delete</Icon> 
+                    </div>
+                ))}
+                  <Button color="primary" onClick={addOption}>
+                        <Icon>
+                            add
+                        </Icon>
+                        Add option
+                    </Button>  
+                </>) 
+                :
+                (<TextField
                     id="answer-key"
                     className="mb-4 w-full"
                     variant="standard"
@@ -98,7 +209,7 @@ const QuestionCard = (props) => {
                     multiline
                     name="answer"
                     value={state.answer || ''}
-                />  
+                />) } 
                 
             </Grid>
             <Grid item md={3} xs={12}>                

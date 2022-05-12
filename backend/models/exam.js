@@ -48,7 +48,9 @@ const examSchema = mongoose.Schema({
             qid:{type:String},
             text:{ type: String, required:true},
             answer:{ type: String},
-            mark:{type: Number, required:true}
+            mark:{type: Number, required:true},
+            qtype:{type:String},
+            options:[{type:String}]
         }
     ]
     
