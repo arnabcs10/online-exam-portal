@@ -50,7 +50,8 @@ const examSchema = mongoose.Schema({
             answer:{ type: String},
             mark:{type: Number, required:true},
             qtype:{type:String},
-            options:[{type:String}]
+            options:[{type:String}],
+            plagiarismCheck: {type:Boolean}
         }
     ]
     

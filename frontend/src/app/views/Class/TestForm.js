@@ -78,7 +78,8 @@ const TestForm = () => {
                 answer:'',
                 mark: 0,
                 qtype:'sa',
-                options:[]
+                options:[],
+                plagiarismCheck: false
             })
             return {...state, numberOfQuestions: questions.length, questions};
         });

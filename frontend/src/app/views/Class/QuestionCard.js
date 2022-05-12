@@ -9,7 +9,8 @@ import {
     Select,
     MenuItem,
     Divider,
-    Checkbox
+    Checkbox,
+    Switch
 } from '@material-ui/core'
 const QuestionCard = (props) => {
     const { qid, deleteQuestion, updateAndSaveQuestion } = props;
@@ -26,7 +27,8 @@ const QuestionCard = (props) => {
         answer:props.answer || '',
         mark: props.mark || '',
         qtype:'sa',
-        options:[]
+        options:[],
+        plagiarismCheck: false
     });
     
     const handleSelectOption = (opId) => {
@@ -85,6 +87,9 @@ const QuestionCard = (props) => {
         {
             val = Number(val);
         }
+        if(event.target.name === 'plagiarismCheck'){
+            val = event.target.checked;
+        }
         setState({
             ...state,
             [event.target.name]: val,
@@ -116,6 +121,7 @@ const QuestionCard = (props) => {
             mark: state.mark ,
             qtype: type,
             options: finalOptions,
+            plagiarismCheck: state.plagiarismCheck,
             qid
             
         });
@@ -125,6 +131,7 @@ const QuestionCard = (props) => {
             mark: state.mark ,
             qtype: type,
             options: finalOptions,
+            plagiarismCheck: state.plagiarismCheck,
             qid
         });  
         
@@ -172,6 +179,7 @@ const QuestionCard = (props) => {
             <Grid item md={9} xs={12}>                
                 {type === 'mcq' ? (
                 <>
+                You can select any single or multiple options:
                 {optionsArray.map((op,index) =>(
                     <div key={op.id} className="flex">
                         <Checkbox
@@ -227,6 +235,16 @@ const QuestionCard = (props) => {
             </Grid>
             <Grid item md={12} xs={12} className="text-right align-middle" style={{marginTop:"-15px"}}>
                 <Divider  />
+                Enable Plagiarism Checker:
+                <Switch
+                    checked={state.plagiarismCheck}
+                    onChange={handleChange}
+                    name="plagiarismCheck"
+                    value="plagiarismCheck"
+                    color="primary"
+                    disabled={type === 'mcq' ? true : false}
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                />
                 <Button color={isSaved ? "primary" : "default"} variant="contained" onClick={handleSubmit} className="mb-3 mr-2">
                     {isSaved ? "Saved" : "Save"}                              
                 </Button>
