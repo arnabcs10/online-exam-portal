@@ -1,17 +1,21 @@
 import React, {useState,useEffect} from 'react';
+import { v4 as uuid } from 'uuid';
 import{
     Divider,
     Grid,
     Button,
-    TextField
+    TextField,
+    Radio,
+    Checkbox
 } from '@material-ui/core';
 import { SimpleCard } from 'app/components';
 
 const QuestionAnswerForm = (props) => {
-    const { qid, text, answer, mark, index, setSelectedIndex, numberOfQuestions, saveAnswer, handleFinalSubmit } = props;
+    const { qid, text, answer, mark, index, qtype, options, setSelectedIndex, numberOfQuestions, saveAnswer, handleFinalSubmit } = props;
 
     // Initialize thses 2 states with values already saved in AnswerSheet DB
     const [isSaved, setIsSaved] = useState(false);
+    const [optionsArray, setOptionsArray] = useState([]);
     const [value,setValue] = useState(answer); 
     const handleChange = (evt) => {
         setIsSaved(false);
@@ -19,8 +23,24 @@ const QuestionAnswerForm = (props) => {
     }
 
     const handleAnswerSave = () => {
-        saveAnswer(qid,value);
-        setIsSaved(true);
+        // setIsSaved(true);
+
+        if(qtype === 'mcq')
+        {
+            let mcqAns = "";
+            optionsArray.forEach((op, index) => {                
+                if(op.isSelected){
+                    mcqAns += index;
+                }
+            });
+            
+            saveAnswer(qid,mcqAns);
+            setIsSaved(true);
+        }else{
+            saveAnswer(qid,value);
+            setIsSaved(true);
+        }
+        
     }
     const moveToNext = () => {
         setSelectedIndex(index+1);
@@ -29,10 +49,39 @@ const QuestionAnswerForm = (props) => {
     const handleSubmit = () =>{
         handleFinalSubmit();
     }
+
+    // handling options
+    const handleSelectOption = (opId) => {
+        setIsSaved(false);
+        setOptionsArray(options => {
+            const newOptions = options.map(op => {
+                if(op.id === opId){
+                    return {...op, isSelected: !op.isSelected}
+                }
+                return op;
+            });
+
+            return newOptions;
+        })
+    }
     useEffect(() => {
         setValue(answer);
+        setOptionsArray(st => (
+            options.map((op,index) => {
+                let optionSelected = false;
+                if(qtype === 'mcq'){
+                    let ansSet = answer.split('');
+                    optionSelected = Boolean(ansSet.find(t => t === `${index}` ));
+                }
+                return {
+                    id: uuid(),
+                    optionText: op,
+                    isSelected: optionSelected
+                }
+            }) 
+        ))
         // if()
-        setIsSaved((answer.length > 1)); // set acc to props not hardcode
+        setIsSaved((answer.length >= 1)); // set acc to props not hardcode
     }, [props])
     
   return (
@@ -54,6 +103,38 @@ const QuestionAnswerForm = (props) => {
                 </Grid>
                 <Grid item md={12} xs={12}>                
                     <div className='text-small font-light'> Answer  </div>
+                        {qtype === 'mcq' ? (
+                             <>
+                             You can select any single or multiple options:
+                             {optionsArray.map((op) =>{
+                                //  let ansSet = answer.split('');
+                                //  let isSelected = ansSet.find(t => t === `${index}` );
+                                 return (
+                                 <div key={op.id} className="flex">
+                                     <Checkbox                                     
+                                     checked={op.isSelected}
+                                     onChange={() => handleSelectOption(op.id)}                                              
+                                     color="primary"                                            
+                                     />
+                                     {/* {index > 1 ?(<Checkbox                                     
+                                     checked={op.isSelected}
+                                     onChange={() => handleSelectOption(op.id)}                                              
+                                     color="primary"                                            
+                                     />)
+                                     :
+                                     (<Checkbox                                        
+                                        checked={op.isSelected}
+                                        onChange={() => handleSelectOption(op.id)}                                             
+                                        color="primary" 
+                                    />)} */}
+                                     <p>{op.optionText}</p>
+                                     
+                                 </div>
+                             )})}
+                               
+                             </>
+                        ) : 
+                        (
                         <TextField 
                             value={value} 
                             onChange={handleChange} 
@@ -61,6 +142,8 @@ const QuestionAnswerForm = (props) => {
                             multiline={true}
                             fullWidth
                         />
+                        )}
+                        
                 
                     
                 </Grid>

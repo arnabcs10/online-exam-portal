@@ -64,7 +64,7 @@ const ClassList = () => {
     return (
         <div className="analytics m-sm-30">
             <div className="flex justify-between items-center items-center mb-6">
-                <h3 className="m-0">Class List</h3>
+                <h3 className="m-0">Classes</h3>
             </div>
             {message && (<Message variant={message.variant} message={message.content}/>)}
             <ClassFormDialog open={open}  handleClose={handleClose}/>

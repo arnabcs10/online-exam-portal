@@ -22,6 +22,26 @@ async function evaluator(sheets, exam){
         let numSheets = sheets.length;
         for(let i=0; i<numberOfQuestions; i++)
         {
+            const plagValueVector = [];
+            const markVector = [];
+
+            if(exam.questions[i].qtype === 'mcq'){
+                // let sampleAnswer = exam.questions[i].answer.split('');
+                let sampleAnswer = exam.questions[i].answer;
+                sheets.forEach(st => {
+                    if(st.answers[i].text === sampleAnswer){
+                        markVector.push(exam.questions[i].mark);
+                    }else{
+                        markVector.push(0);
+                    }
+                    plagValueVector.push(0);
+                });
+                console.log(plagValueVector, markVector);
+                plagiarismMatrix.push(plagValueVector);
+                markMatrix.push(markVector);
+                continue;
+            }
+
             let docfiles = [];
             docfiles.push(exam.questions[i].answer);
 
@@ -29,8 +49,7 @@ async function evaluator(sheets, exam){
                 docfiles.push(st.answers[i].text);
             });
 
-            const plagValueVector = [];
-            const markVector = [];
+            
             
             const {plagiarismVector, similarityVector} = await compute(docfiles);
             
@@ -54,14 +73,17 @@ async function evaluator(sheets, exam){
             
             plagiarismMatrix.push(plagValueVector);
             markMatrix.push(markVector);
+
+            console.log(plagValueVector, markVector);
         }
         const result = {
             plagiarismMatrix,
             markMatrix
         }
-        console.log(result);
+        console.log('res:',result);
         return result;
     } catch (error) {
+        console.log('er');
         console.log(error);
     }
 

@@ -17,7 +17,8 @@ import {
     TableBody,
     IconButton,
     TableRow,
-    Divider
+    Divider,
+    Radio
 } from '@material-ui/core';
 import MatxLoading from 'app/components/MatxLoading/MatxLoading';
 import Message from './CustomSnackbar';
@@ -25,7 +26,7 @@ import { SimpleCard } from 'app/components'
 import {getExamDetails, getExamResults, computeExamResults} from 'app/redux/actions/ExamActions';
 
 const QuestionCard = (props) => {
-    const { qid, text, answer, mark, studentResponse } = props;
+    const { qid, text, answer, mark, qtype, options, plagiarismCheck, studentResponse } = props;
     
     
     return (
@@ -46,9 +47,35 @@ const QuestionCard = (props) => {
             </Grid>
             <Grid item md={10} xs={12}>                
                 <div className='text-small font-light'> Answer Key </div>
-                <p>
+                {qtype === 'mcq' ? (
+                             <>
+                             
+                             {options.map((op,index) =>{
+                                 let ansSet = answer.split('');
+                                 let isSelected = ansSet.find(t => t === `${index}` );
+                                 return isSelected &&(
+                                 <div key={op} className="flex">
+                                     {ansSet.length > 1 ?(<Checkbox
+                                     disabled
+                                     checked={isSelected}                                            
+                                     color="primary"                                            
+                                     />)
+                                     :
+                                     (<Radio
+                                        disabled
+                                        checked={isSelected}                                            
+                                        color="primary" 
+                                    />)}
+                                     <p>{op}</p>
+                                     
+                                 </div>
+                             )})}
+                               
+                             </>
+                ) : 
+                (<p>
                     {answer}
-                </p>
+                </p>)}
                
                 <Divider  />
             </Grid>
@@ -62,9 +89,36 @@ const QuestionCard = (props) => {
             </Grid>
             <Grid item md={10} xs={12}>                
                 <div className='text-small font-light'> Answer </div>
-                <p>
+                {qtype === 'mcq' ? (
+                             <>
+                             
+                             {options.map((op,index) =>{
+                                 let ansSet = studentResponse.text.split('');
+                                 let isSelected = ansSet.find(t => t === `${index}` );
+                                 return isSelected && (
+                                 <div key={op} className="flex">
+                                     {ansSet.length > 1 ?(<Checkbox
+                                     disabled
+                                     checked={isSelected}                                            
+                                     color="primary"                                            
+                                     />)
+                                     :
+                                     (<Radio
+                                        disabled
+                                        checked={isSelected}                                            
+                                        color="primary" 
+                                    />)}
+                                     <p>{op}</p>
+                                     
+                                 </div>
+                             )})}
+                               
+                             </>
+                ) : 
+                (<p>
                     {studentResponse.text}
-                </p>
+                </p>)}
+                
                
                 
             </Grid>
@@ -227,7 +281,10 @@ const TestDashboard = () => {
                                         qid={que.qid} 
                                         text={que.text}
                                         answer={que.answer}
-                                        mark={que.mark}    
+                                        mark={que.mark} 
+                                        qtype={que.qtype} 
+                                        options={que.options} 
+                                        plagiarismCheck={que.options}   
                                         studentResponse={studentResult.answers[index]}                                
                                     />
                                                             

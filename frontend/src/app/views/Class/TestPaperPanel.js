@@ -5,13 +5,16 @@ import{
     Accordion,
     AccordionSummary,
     AccordionDetails,
-    Typography
+    Typography,
+    Checkbox,
+    Switch,
+    Radio
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { SimpleCard } from 'app/components';
 
 const QuestionCard = (props) => {
-    const { qid, text, answer, mark } = props;
+    const { qid, text, answer, mark, qtype, options, plagiarismCheck } = props;
     
 
     
@@ -34,9 +37,35 @@ const QuestionCard = (props) => {
             </Grid>
             <Grid item md={10} xs={12}>                
                 <div className='text-small font-light'> Answer Key </div>
-                <p>
+                {qtype === 'mcq' ? (
+                             <>
+                             You can select any single or multiple options:
+                             {options.map((op,index) =>{
+                                 let ansSet = answer.split('');
+                                 let isSelected = ansSet.find(t => t === `${index}` );
+                                 return (
+                                 <div key={op} className="flex">
+                                     {ansSet.length > 1 ?(<Checkbox
+                                     disabled
+                                     checked={isSelected}                                            
+                                     color="primary"                                            
+                                     />)
+                                     :
+                                     (<Radio
+                                        disabled
+                                        checked={isSelected}                                            
+                                        color="primary" 
+                                    />)}
+                                     <p>{op}</p>
+                                     
+                                 </div>
+                             )})}
+                               
+                             </>
+                ) : 
+                (<p>
                     {answer}
-                </p>
+                </p>)}
                
                 
             </Grid>
@@ -51,6 +80,14 @@ const QuestionCard = (props) => {
             <Grid item md={12} xs={12} className="text-right align-middle" style={{marginTop:"-15px"}}>
                 <Divider  />
                 {/* You can put button or icon here to denote plagarism detection enabled */}
+                Enable Plagiarism Checker:
+                <Switch
+                    checked={plagiarismCheck}
+                    name="plagiarismCheck"
+                    value="plagiarismCheck"
+                    color="primary"                    
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                />
                 
             </Grid>
         </Grid>
@@ -81,7 +118,9 @@ const TestPaperPanel = (props) => {
                             text={que.text}
                             answer={que.answer}
                             mark={que.mark}
-                           
+                            qtype={que.qtype}
+                            options={que.options}
+                            plagiarismCheck={que.plagiarismCheck}
                         />
                                                 
                     </SimpleCard>                  
