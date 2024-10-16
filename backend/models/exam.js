@@ -2,14 +2,14 @@ const mongoose = require('mongoose');
 
 
 const examSchema = mongoose.Schema({
-    _id:{
-        type:String,
-        required:true,
-        unique:true
-    },
+    // _id:{
+    //     type:String,
+    //     required:true,
+    //     unique:true
+    // },
     groupId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Group',
+        ref:'group',
         required:true,
     },
     name:{
@@ -30,11 +30,30 @@ const examSchema = mongoose.Schema({
     duration:{
         type:Number,
     },
-    questionPaperId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'QuestionPaper',
+    // questionPaperId:{
+    //     type:mongoose.Schema.Types.ObjectId,
+    //     ref:'QuestionPaper',
+    //     required:true,
+    // }
+    totalMarks:{
+        type:Number,
         required:true,
-    }
+    },
+    numberOfQuestions:{
+        type:Number,
+        required:true
+    },
+    questions:[
+        {
+            qid:{type:String},
+            text:{ type: String, required:true},
+            answer:{ type: String},
+            mark:{type: Number, required:true},
+            qtype:{type:String},
+            options:[{type:String}],
+            plagiarismCheck: {type:Boolean}
+        }
+    ]
     
 },{
     timestamps:true

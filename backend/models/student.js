@@ -16,9 +16,9 @@ const studentSchema = mongoose.Schema({
     //     required:true
     // },
     rollNumber:{
-        type:Number,
+        type:String,
         required:true,
-        unique:true
+        // unique:true
     },
     groupsEnrolled:[
         {

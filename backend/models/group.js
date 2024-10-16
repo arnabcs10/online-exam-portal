@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 
 const groupSchema = mongoose.Schema({
-    _id:{
-        type:String,
-        required:true,
-        unique:true
-    },
+    // _id:{
+    //     type:String,
+    //     required:true,
+    //     unique:true
+    // },
     name:{
         type:String,
         required:true
@@ -20,10 +20,10 @@ const groupSchema = mongoose.Schema({
     description:{
         type:String,
     },
-    teacherId:{
+    examinerId:{
         type:mongoose.Schema.Types.ObjectId,
         required:true,
-        ref:'Teacher'
+        ref:'examiner'
     },
     strength:{
         type:Number
@@ -31,13 +31,13 @@ const groupSchema = mongoose.Schema({
     studentsEnrolled:[
         {
             type:mongoose.Schema.Types.ObjectId,
-            ref:'Student'
+            ref:'student'
         }
     ],
     examsTaken:[
         {
             type:mongoose.Schema.Types.ObjectId,
-            ref:'Exam'
+            ref:'exam'
         }
     ]
     

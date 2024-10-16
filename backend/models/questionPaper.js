@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 
 const questionPaperSchema = mongoose.Schema({
-    _id:{
-        type:String,
-        required:true,
-        unique:true
-    },
+    // _id:{
+    //     type:String,
+    //     required:true,
+    //     unique:true
+    // },
     instructions:{
         type:String,
         required:true

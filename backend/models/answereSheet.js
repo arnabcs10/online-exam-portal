@@ -1,27 +1,38 @@
 const mongoose = require('mongoose');
 
+const answerSchema = mongoose.Schema({
+    qid:{type:String},
+    questionNumber:{type:Number},
+    text:{ type:String },
+    markAssigned: {type:Number, default:0},
+    plagiarismCheck: {type:Boolean},
+    plagiarismValue: {type: Number, default:0}
+});
 
 const answereSheetSchema = mongoose.Schema({
     studentId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Student',
+        ref:'student',
         required:true,
     },
     examId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Exam',
+        ref:'exam',
         required:true,
+    },
+    timeLeft:{
+        type:Number,
+    },
+    attempted:{
+        type:Boolean,
+        default: false
     },
     marks:{
         type:Number,
         default:0
     },
-    answeres:[
-        {
-            questionNumber:{type:Number},
-            text:{ type:String },
-            markAssigned: {type:Number, default:0}
-        }
+    answers:[
+        answerSchema
     ],
     
     
